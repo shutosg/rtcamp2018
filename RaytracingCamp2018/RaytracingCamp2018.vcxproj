@@ -115,6 +115,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Ppm.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -122,6 +123,7 @@
     <ClCompile Include="Vec.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.hpp" />
     <ClInclude Include="constant.h" />
     <ClInclude Include="Ppm.hpp" />
     <ClInclude Include="Renderer.hpp" />
