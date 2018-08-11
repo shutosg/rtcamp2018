@@ -118,12 +118,14 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Ppm.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Spectrum.cpp" />
     <ClCompile Include="Vec.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constant.h" />
     <ClInclude Include="Ppm.hpp" />
     <ClInclude Include="Renderer.hpp" />
+    <ClInclude Include="Spectrum.hpp" />
     <ClInclude Include="Vec.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
