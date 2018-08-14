@@ -19,8 +19,12 @@ public:
     Spectrum operator * (const Spectrum &s);
     Spectrum operator / (const Spectrum &s);
     void operator = (const Spectrum &s);
+    void operator += (const Spectrum &s);
     Vec toColor();
     std::string toStr();
+
+    static const Spectrum Black;
+    static const Spectrum Sky;
 private:
     const double DISPLAY_GAMMA = 2.2;
 };
