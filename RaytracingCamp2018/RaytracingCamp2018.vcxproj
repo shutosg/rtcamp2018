@@ -116,22 +116,27 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Intersection.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Ppm.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Spectrum.cpp" />
+    <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Vec.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.hpp" />
     <ClInclude Include="constant.h" />
+    <ClInclude Include="IIntersectable.hpp" />
+    <ClInclude Include="Intersection.hpp" />
     <ClInclude Include="Material.hpp" />
     <ClInclude Include="Ppm.hpp" />
     <ClInclude Include="Ray.hpp" />
     <ClInclude Include="Renderer.hpp" />
     <ClInclude Include="Spectrum.hpp" />
+    <ClInclude Include="Sphere.hpp" />
     <ClInclude Include="Vec.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
