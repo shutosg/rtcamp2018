@@ -117,6 +117,7 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Material.cpp" />
     <ClCompile Include="Ppm.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -126,6 +127,7 @@
   <ItemGroup>
     <ClInclude Include="Camera.hpp" />
     <ClInclude Include="constant.h" />
+    <ClInclude Include="Material.hpp" />
     <ClInclude Include="Ppm.hpp" />
     <ClInclude Include="Ray.hpp" />
     <ClInclude Include="Renderer.hpp" />
