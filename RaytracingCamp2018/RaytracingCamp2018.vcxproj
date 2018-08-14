@@ -122,6 +122,7 @@
     <ClCompile Include="Ppm.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Spectrum.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Vec.cpp" />
@@ -135,6 +136,7 @@
     <ClInclude Include="Ppm.hpp" />
     <ClInclude Include="Ray.hpp" />
     <ClInclude Include="Renderer.hpp" />
+    <ClInclude Include="Scene.hpp" />
     <ClInclude Include="Spectrum.hpp" />
     <ClInclude Include="Sphere.hpp" />
     <ClInclude Include="Vec.hpp" />
