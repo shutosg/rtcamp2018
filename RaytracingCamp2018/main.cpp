@@ -1,5 +1,4 @@
-#include <iostream>
-#include "Renderer.hpp"
+﻿#include "Renderer.hpp"
 
 int main() {
     const int w = 1200;

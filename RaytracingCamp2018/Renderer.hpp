@@ -1,9 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include <iostream>
 #include <fstream>
-#include <vector>
 #include "Ppm.hpp"
+#include "Camera.hpp"
+#include "Scene.hpp"
+#include "constant.h"
 
 class Renderer
 {
@@ -14,5 +16,8 @@ public:
 private:
     int width;
     int height;
+    Scene scene;
+
+    void initScene();
 };
 

@@ -12,7 +12,6 @@ public:
         const Vec &pos,
         const Vec &dir,
         const Vec &up,
-        double fov,
         double focalDist,
         double aspect
     );
