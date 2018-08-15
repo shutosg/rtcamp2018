@@ -8,12 +8,38 @@ Renderer::Renderer(int width, int height)
 
 void Renderer::initScene()
 {
+    // 球の追加
     scene.addIntersectable(
         new Sphere(0.25, new Vec(0, 0, 0), new Material(new Spectrum(1, 1, 1)))
     );
     scene.addIntersectable(
-        new Sphere(0.1, new Vec(1, 0, 0), new Material(new Spectrum(1, 0, 0)))
+        new Sphere(0.2, new Vec(-0.3, -0.3, 0.4), new Material(new Spectrum(1, 1, 1)))
     );
+    scene.addIntersectable(
+        new Sphere(0.3, new Vec(0.3, 0.3, -0.4), new Material(new Spectrum(1, 1, 1)))
+    );
+
+    // コーネルボックス
+    scene.addIntersectable(
+        new Sphere(1000, new Vec(1001, 0, 0), new Material(new Spectrum(0, 0.95, 0)))
+    );
+    scene.addIntersectable(
+        new Sphere(1000, new Vec(-1001, 0, 0), new Material(new Spectrum(0.95, 0, 0)))
+    );
+    scene.addIntersectable(
+        new Sphere(1000, new Vec(0, 1001, 0), new Material(new Spectrum(0.95)))
+    );
+    scene.addIntersectable(
+        new Sphere(1000, new Vec(0, -1001, 0), new Material(new Spectrum(0.95)))
+    );
+    scene.addIntersectable(
+        new Sphere(1000, new Vec(0, 0, -1001), new Material(new Spectrum(0.95)))
+    );
+
+
+    // ライトの追加
+    scene.addLight(new Light(new Vec(2.0), new Spectrum(100, 80, 80)));
+    scene.addLight(new Light(new Vec(-2.0, -2.0, 2.0), new Spectrum(80, 80, 100)));
 }
 
 void Renderer::startRendering()
@@ -29,7 +55,7 @@ void Renderer::startRendering()
         Vec(0, 0, 10),
         Vec(0, 0, -1),
         Vec(0, 1, 0),
-        10,
+        4,
         aspect
     );
 
