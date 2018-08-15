@@ -20,15 +20,33 @@ Vec::Vec(double x, double y, double z)
 }
 
 Vec::Vec(double v)
+    : x(v)
+    , y(v)
+    , z(v)
 {
-    this->x = v;
-    this->y = v;
-    this->z = v;
 }
 
 Vec Vec::neg() const
 {
     return Vec(-x, -y, -z);
+}
+
+Vec Vec::reflect(const Vec &n) const
+{
+    return Vec(x, y, z) - n.scale(2 * dot(n));
+}
+
+Vec Vec::refract(const Vec &n, double eta) const
+{
+    auto dot = Vec::dot(n);
+    auto d = 1.0 - eta * eta * (1.0 - dot * dot);
+    if (d > 0) {
+        Vec a = (operator-(n.scale(dot))).scale(eta);
+        Vec b = n.scale(d * d);
+        return a - b;
+    }
+    // 全反射
+    return reflect(n);
 }
 
 Vec Vec::normalize() const

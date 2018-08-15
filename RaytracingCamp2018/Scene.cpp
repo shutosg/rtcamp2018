@@ -31,8 +31,11 @@ void Scene::addLight(Light *light)
     lights->push_back(light);
 }
 
-void Scene::trace(const Ray &ray, Spectrum &spectrum)
+void Scene::trace(const Ray &ray, Spectrum &spectrum, int depth)
 {
+    // 反射制限数チェック
+    if (depth >= constants::kMAX_TRACE_DEPTH) return;
+
     auto nearest = Intersection();
     findNearestInterSection(ray, nearest);
     // ヒットしなかったので空の色
@@ -40,9 +43,41 @@ void Scene::trace(const Ray &ray, Spectrum &spectrum)
         spectrum += Spectrum::Sky;
         return;
     }
-    // 物体にヒットしたのでライトの数だけライティング
-    for (auto i = 0; i < lights->size(); i++) {
-        diffuseLighting(*nearest.point, *nearest.normal, *lights->at(i), *nearest.mat->diffuse, spectrum);
+
+    // 物体の外部からの交差
+    if (nearest.normal->dot(ray.dir) < 0) {
+        // 鏡面反射
+        auto ks = nearest.mat->reflective;
+        if (ks > 0) {
+            // 反射レイ
+            auto reflect = ray.dir.reflect(*nearest.normal);
+            Spectrum s(Spectrum::Black);
+            trace(Ray(*nearest.point, reflect.normalize(), true), s, depth + 1);
+            spectrum += s.scale(ks) * *nearest.mat->diffuse;
+        }
+        // 屈折
+        auto kt = nearest.mat->refractive;
+        if (kt > 0) {
+            // 屈折レイ
+            auto refract = ray.dir.refract(*nearest.normal, constants::kVACUUM_REFRACTIVE_INDEX / nearest.mat->refractiveIndex);
+            Spectrum s(Spectrum::Black);
+            trace(Ray(*nearest.point, refract.normalize(), true), s, depth + 1);
+            spectrum += s.scale(kt) * *nearest.mat->diffuse;
+        }
+        // 拡散反射
+        auto kd = 1.0 - ks - kt;
+        if (kd > 0) {
+            Spectrum s(Spectrum::Black);
+            for (auto i = 0; i < lights->size(); i++) {
+                diffuseLighting(*nearest.point, *nearest.normal, *lights->at(i), *nearest.mat->diffuse, s);
+            }
+            spectrum += s.scale(kd);
+        }
+    } else {
+        // 物体の内部からの交差
+        // 屈折レイ
+        auto refract = ray.dir.refract(nearest.normal->neg(), nearest.mat->refractiveIndex / constants::kVACUUM_REFRACTIVE_INDEX);
+        trace(Ray(*nearest.point, refract.normalize(), true), spectrum, depth + 1);
     }
 }
 

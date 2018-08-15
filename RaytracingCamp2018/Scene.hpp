@@ -14,7 +14,7 @@ public:
     ~Scene();
     void addIntersectable(IIntersectable *obj);
     void addLight(Light *light);
-    void trace(const Ray &ray, Spectrum &spectrum);
+    void trace(const Ray &ray, Spectrum &spectrum, int depth = 0);
 
 private:
     std::vector<IIntersectable*> *objs;

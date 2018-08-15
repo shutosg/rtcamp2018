@@ -12,6 +12,8 @@ public:
     double x, y, z;
 
     Vec neg() const;
+    Vec reflect(const Vec &n) const;
+    Vec refract(const Vec &n, double eta) const;
     Vec normalize() const;
     Vec scale(const double s) const;
     double len() const;
