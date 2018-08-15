@@ -9,15 +9,9 @@ Renderer::Renderer(int width, int height)
 void Renderer::initScene()
 {
     // 球の追加
-    scene.addIntersectable(
-        new Sphere(0.25, new Vec(0, 0, 0), new Material(new Spectrum(1, 1, 1)))
-    );
-    scene.addIntersectable(
-        new Sphere(0.2, new Vec(-0.3, -0.3, 0.4), new Material(new Spectrum(1, 1, 1)))
-    );
-    scene.addIntersectable(
-        new Sphere(0.3, new Vec(0.3, 0.3, -0.4), new Material(new Spectrum(1, 1, 1)))
-    );
+    scene.addIntersectable(new Sphere(0.25, new Vec(0), new Material(new Spectrum(1, 1, 1))));
+    scene.addIntersectable(new Sphere(0.3, new Vec(-0.5, -0.3, 0.4), new Material(new Spectrum(1, 1, 1))));
+    scene.addIntersectable(new Sphere(0.3, new Vec(0.3, 0.3, -0.4), new Material(new Spectrum(1, 1, 1))));
 
     // コーネルボックス
     createCornellBox(6, 6, 8);
@@ -33,21 +27,11 @@ void Renderer::createCornellBox(double w, double h, double d)
     auto x = a + w / 2;
     auto y = a + h / 2;
     auto z = a + d / 2;
-    scene.addIntersectable(
-        new Sphere(a, new Vec(x, 0, 0), new Material(new Spectrum(0, 0.95, 0)))
-    );
-    scene.addIntersectable(
-        new Sphere(a, new Vec(-x, 0, 0), new Material(new Spectrum(0.95, 0, 0)))
-    );
-    scene.addIntersectable(
-        new Sphere(a, new Vec(0, y, 0), new Material(new Spectrum(0.95)))
-    );
-    scene.addIntersectable(
-        new Sphere(a, new Vec(0, -y, 0), new Material(new Spectrum(0.95)))
-    );
-    scene.addIntersectable(
-        new Sphere(a, new Vec(0, 0, -z), new Material(new Spectrum(0.95)))
-    );
+    scene.addIntersectable(new Sphere(a, new Vec(+x, 0, 0), new Material(new Spectrum(0, 0.95, 0))));
+    scene.addIntersectable(new Sphere(a, new Vec(-x, 0, 0), new Material(new Spectrum(0.95, 0, 0))));
+    scene.addIntersectable(new Sphere(a, new Vec(0, +y, 0), new Material(new Spectrum(0.95))));
+    scene.addIntersectable(new Sphere(a, new Vec(0, -y, 0), new Material(new Spectrum(0.95))));
+    scene.addIntersectable(new Sphere(a, new Vec(0, 0, -z), new Material(new Spectrum(0.95))));
 }
 
 void Renderer::startRendering()
