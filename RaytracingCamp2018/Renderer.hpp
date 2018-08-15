@@ -19,5 +19,6 @@ private:
     Scene scene;
 
     void initScene();
+    void createCornellBox(double w, double h, double d);
 };
 

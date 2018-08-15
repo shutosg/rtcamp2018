@@ -20,26 +20,34 @@ void Renderer::initScene()
     );
 
     // コーネルボックス
-    scene.addIntersectable(
-        new Sphere(1000, new Vec(1001, 0, 0), new Material(new Spectrum(0, 0.95, 0)))
-    );
-    scene.addIntersectable(
-        new Sphere(1000, new Vec(-1001, 0, 0), new Material(new Spectrum(0.95, 0, 0)))
-    );
-    scene.addIntersectable(
-        new Sphere(1000, new Vec(0, 1001, 0), new Material(new Spectrum(0.95)))
-    );
-    scene.addIntersectable(
-        new Sphere(1000, new Vec(0, -1001, 0), new Material(new Spectrum(0.95)))
-    );
-    scene.addIntersectable(
-        new Sphere(1000, new Vec(0, 0, -1001), new Material(new Spectrum(0.95)))
-    );
-
+    createCornellBox(6, 6, 8);
 
     // ライトの追加
-    scene.addLight(new Light(new Vec(2.0), new Spectrum(100, 80, 80)));
-    scene.addLight(new Light(new Vec(-2.0, -2.0, 2.0), new Spectrum(80, 80, 100)));
+    scene.addLight(new Light(new Vec(1.95), new Spectrum(100, 80, 80)));
+    scene.addLight(new Light(new Vec(-1.0, -1.95, 1.95), new Spectrum(80, 80, 100)));
+}
+
+void Renderer::createCornellBox(double w, double h, double d)
+{
+    auto a = 1000.0;
+    auto x = a + w / 2;
+    auto y = a + h / 2;
+    auto z = a + d / 2;
+    scene.addIntersectable(
+        new Sphere(a, new Vec(x, 0, 0), new Material(new Spectrum(0, 0.95, 0)))
+    );
+    scene.addIntersectable(
+        new Sphere(a, new Vec(-x, 0, 0), new Material(new Spectrum(0.95, 0, 0)))
+    );
+    scene.addIntersectable(
+        new Sphere(a, new Vec(0, y, 0), new Material(new Spectrum(0.95)))
+    );
+    scene.addIntersectable(
+        new Sphere(a, new Vec(0, -y, 0), new Material(new Spectrum(0.95)))
+    );
+    scene.addIntersectable(
+        new Sphere(a, new Vec(0, 0, -z), new Material(new Spectrum(0.95)))
+    );
 }
 
 void Renderer::startRendering()
@@ -55,7 +63,7 @@ void Renderer::startRendering()
         Vec(0, 0, 10),
         Vec(0, 0, -1),
         Vec(0, 1, 0),
-        4,
+        2,
         aspect
     );
 
