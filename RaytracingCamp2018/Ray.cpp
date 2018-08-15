@@ -6,12 +6,6 @@ Ray::Ray()
 {
 }
 
-Ray::Ray(const Vec &origin, const Vec &dir)
-    : origin(origin)
-    , dir(dir)
-{
-}
-
 Ray::Ray(const Vec &origin, const Vec &dir, bool isAdvanceRay)
     : origin(origin)
     , dir(dir)

@@ -21,5 +21,6 @@ private:
 
     void findNearestInterSection(const Ray &ray, Intersection &isect);
     void diffuseLighting(const Vec &p, const Vec &n, const Light &light, const Spectrum &matDiffuse, Spectrum &spectrum);
+    bool visible(const Vec &from, const Vec &to);
 };
 

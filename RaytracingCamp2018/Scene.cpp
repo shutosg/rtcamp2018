@@ -64,8 +64,25 @@ void Scene::diffuseLighting(const Vec &p, const Vec &n, const Light &light, cons
     auto dot = n.dot(v.normalize());
     // 面が光源を向いている
     if (dot > 0) {
+        // 遮蔽物チェック
+        if (!visible(p, *light.pos)) return;
         // 光源からの距離に応じて拡散反射ライティング
         auto r = v.len();
         spectrum += (*light.power).scale(dot / (4 * constants::kPI * r * r)) * matDiffuse;
     }
+}
+
+bool Scene::visible(const Vec &from, const Vec &to)
+{
+    // posから光源に向かうベクトル
+    auto v = (to - from).normalize();
+    auto ray = Ray(from, v, true);
+    for (auto i = 0; i < objs->size(); i++) {
+        auto obj = objs->at(i);
+        auto isect = Intersection();
+        obj->intersect(ray, isect);
+        // posから光源までの間に遮蔽物がある
+        if (isect.t < v.len()) return false;
+    }
+    return true;
 }

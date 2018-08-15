@@ -7,8 +7,7 @@ class Ray
 {
 public:
     Ray();
-    Ray(const Vec &origin, const Vec &dir);
-    Ray(const Vec &origin, const Vec &dir, bool isAdvanceRay);
+    Ray(const Vec &origin, const Vec &dir, bool isAdvanceRay = false);
     ~Ray();
     Vec origin;
     Vec dir;
