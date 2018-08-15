@@ -6,6 +6,7 @@ class Vec
 {
 public:
     Vec();
+    Vec(const Vec &v);
     Vec(double x, double y, double z);
     Vec(double v);
     double x, y, z;

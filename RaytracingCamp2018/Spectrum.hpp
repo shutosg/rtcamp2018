@@ -9,6 +9,7 @@ class Spectrum
 {
 public:
     Spectrum();
+    Spectrum(const Spectrum &s);
     Spectrum(double r, double g, double b);
     Spectrum(double v);
     double r, g, b;

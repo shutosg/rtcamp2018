@@ -5,18 +5,25 @@ Spectrum::Spectrum()
     r = g = b = 0;
 }
 
-Spectrum::Spectrum(double r, double g, double b)
+Spectrum::Spectrum(const Spectrum &s)
+    : r(s.r)
+    , g(s.g)
+    , b(s.b)
 {
-    this->r = r;
-    this->g = g;
-    this->b = b;
+}
+
+Spectrum::Spectrum(double r, double g, double b)
+    : r(r)
+    , g(g)
+    , b(b)
+{
 }
 
 Spectrum::Spectrum(double v)
+    : r(v)
+    , g(v)
+    , b(v)
 {
-    r = v;
-    g = v;
-    b = v;
 }
 
 Spectrum Spectrum::scale(const double s)

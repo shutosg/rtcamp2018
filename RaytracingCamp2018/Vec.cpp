@@ -5,6 +5,13 @@ Vec::Vec()
     x = y = z = 0;
 }
 
+Vec::Vec(const Vec &v)
+    : x(v.x)
+    , y(v.y)
+    , z(v.z)
+{
+}
+
 Vec::Vec(double x, double y, double z)
     : x(x)
     , y(y)
