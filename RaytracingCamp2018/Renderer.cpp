@@ -19,6 +19,9 @@ void Renderer::initScene()
     // ライトの追加
     scene.addLight(new Light(new Vec(1.95), new Spectrum(100, 80, 80)));
     scene.addLight(new Light(new Vec(-1.0, -1.95, 1.95), new Spectrum(80, 80, 100)));
+
+    // 無限平面
+    // scene.addIntersectable(new Plane(new Vec(0, 1, 0), 0.75, new Material()));
 }
 
 void Renderer::createCornellBox(double w, double h, double d)
