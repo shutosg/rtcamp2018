@@ -69,13 +69,19 @@ void Renderer::startRendering()
     printf("tracing...\n");
     auto lastPrint = 0.0;
     auto size = width * height;
+
+#pragma omp parallel for schedule(dynamic)
     for (auto y = 0; y < height; y++) {
         for (auto x = 0; x < width; x++) {
             auto idx = y * width + x;
+            // OpenMP無効時のみ
+            #ifndef _OPENMP
             if (width > 480 && (double)idx / size > lastPrint + 0.1) {
                 printf("%2.2lf%%完了…\n", (double)idx / size * 100.0);
                 lastPrint += 0.1;
             }
+            #endif
+
             colors[idx] = Spectrum::Black;
             auto ray = cam.getPrimaryRay((x + 0.5) / width - 0.5, -(y + 0.5) / height + 0.5);
             scene.trace(ray, colors[idx]);
