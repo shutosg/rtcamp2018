@@ -3,7 +3,17 @@
 Renderer::Renderer(int width, int height)
     : width(width)
     , height(height)
+    , colors(new Spectrum[width * height])
 {
+    for (auto i = 0; i < width * height; i++)
+    {
+        colors[i] = Spectrum::Black;
+    }
+}
+
+Renderer::~Renderer()
+{
+    delete[] colors;
 }
 
 void Renderer::initScene()
@@ -47,12 +57,20 @@ void Renderer::createCornellBox(double w, double h, double d)
     scene.addIntersectable(new Sphere(a, new Vec(0, 0, -z), new Material(new Spectrum(0.95))));
 }
 
+void Renderer::initTimer()
+{
+    lastPrintTime = getTime();
+    lastSaveTime = getTime();
+    startTime = getTime();
+}
+
 void Renderer::startRendering()
 {
     // シーン準備
     printf("シーン準備\n");
     scene = Scene();
     initScene();
+    initTimer();
 
     // カメラ作成
     auto aspect = (double)width / height;
@@ -65,35 +83,76 @@ void Renderer::startRendering()
     );
 
     // レイを飛ばして色を算出
-    Spectrum *colors = new Spectrum[width * height];
-    printf("tracing...\n");
-    auto lastPrint = 0.0;
     auto size = width * height;
+    printf("tracing...\n");
+    Random& rnd = Random::get_instance();
 
+    for (auto i = 0; i < constants::kMAX_SAMPLING_NUM; i++) {
 #pragma omp parallel for schedule(dynamic)
-    for (auto y = 0; y < height; y++) {
-        for (auto x = 0; x < width; x++) {
-            auto idx = y * width + x;
-            // OpenMP無効時のみ
-            #ifndef _OPENMP
-            if (width > 480 && (double)idx / size > lastPrint + 0.1) {
-                printf("%2.2lf%%完了…\n", (double)idx / size * 100.0);
-                lastPrint += 0.1;
+        for (auto y = 0; y < height; y++) {
+            for (auto x = 0; x < width; x++) {
+                auto idx = y * width + x;
+                auto ray = cam.getPrimaryRay((x + rnd.random(-0.5, 0.5)) / width - 0.5, -(y + rnd.random(-0.5, 0.5)) / height + 0.5);
+                scene.trace(ray, colors[idx]);
             }
-            #endif
-
-            colors[idx] = Spectrum::Black;
-            auto ray = cam.getPrimaryRay((x + 0.5) / width - 0.5, -(y + 0.5) / height + 0.5);
-            scene.trace(ray, colors[idx]);
+        }
+#pragma omp critical
+        {
+            checkProgress(i);
         }
     }
 
+    printf("保存開始中\n");
+#pragma omp parallel for
+    for (auto i = 0; i < size; i++) {
+        colors[i] = colors[i].scale(1.0 / constants::kMAX_SAMPLING_NUM);
+    }
     // ファイル用意
     Ppm ppm = Ppm();
     printf("保存中\n");
     // 保存
     std::string fileName = "output.ppm";
     ppm.savePpm(fileName, colors, width, height);
-    delete colors;
     printf("終了\n");
+}
+
+void Renderer::checkProgress(int sampleIdx)
+{
+    const double PrintInterval = 3000;
+    auto now = getTime();
+    if (getDiff(lastPrintTime, now) > PrintInterval) {
+        printf("%2.2lf%%完了…\n", getProgress(sampleIdx) * 100.0);
+        lastPrintTime = now;
+    }
+    const double SaveInterval = 15000;
+    if (getDiff(lastSaveTime, now) > SaveInterval) {
+        auto saveColors = new Spectrum[width * height];
+#pragma omp parallel for
+        for (auto i = 0; i < width * height; i++) {
+            saveColors[i] = colors[i].scale(1.0 / sampleIdx);
+        }
+        // ファイル用意
+        Ppm ppm = Ppm();
+        printf("保存\n");
+        // 保存
+        std::string fileName = "output.ppm";
+        ppm.savePpm(fileName, saveColors, width, height);
+        delete[] saveColors;
+        lastSaveTime = now;
+    }
+}
+
+double Renderer::getProgress(int sampleIdx)
+{;
+    return sampleIdx / (double)constants::kMAX_SAMPLING_NUM;
+}
+
+clk::time_point Renderer::getTime()
+{
+    return std::chrono::system_clock::now();
+}
+
+double Renderer::getDiff(clk::time_point start, clk::time_point end)
+{
+    return (double)std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 }

@@ -2,23 +2,36 @@
 
 #include <iostream>
 #include <fstream>
+#include <chrono>
 #include "Ppm.hpp"
 #include "Camera.hpp"
 #include "Scene.hpp"
 #include "constant.h"
 
+using clk = std::chrono::system_clock;
+
 class Renderer
 {
 public:
     Renderer(int width, int height);
+    ~Renderer();
     void startRendering();
 
 private:
     int width;
     int height;
     Scene scene;
+    Spectrum *colors;
+    clk::time_point startTime;
+    clk::time_point lastPrintTime;
+    clk::time_point lastSaveTime;
 
     void initScene();
+    void initTimer();
     void createCornellBox(double w, double h, double d);
+    double getProgress(int sampleIdx);
+    void checkProgress(int sampleIdx);
+    clk::time_point getTime();
+    double getDiff(clk::time_point start, clk::time_point end);
 };
 
