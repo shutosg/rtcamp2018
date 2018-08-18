@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
+#include <iomanip>
 #include <chrono>
 #include "Ppm.hpp"
 #include "Camera.hpp"
@@ -28,6 +30,7 @@ private:
 
     void initScene();
     void initTimer();
+    void saveImage(std::string fileName, Spectrum * colors, bool overWritten = true, int index = -1);
     void createCornellBox(double w, double h, double d);
     double getProgress(int sampleIdx);
     void checkProgress(int sampleIdx);

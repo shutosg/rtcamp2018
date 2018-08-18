@@ -103,7 +103,7 @@ void Renderer::startRendering()
         }
 #pragma omp critical
         {
-            checkProgress(i);
+            checkProgress(i + 1);
         }
     }
 
@@ -111,22 +111,21 @@ void Renderer::startRendering()
 #pragma omp parallel for
     for (auto i = 0; i < size; i++) {
         colors[i] = colors[i].scale(1.0 / constants::kMAX_SAMPLING_NUM);
-    }
-    // ファイル用意
-    Ppm ppm = Ppm();
-    printf("保存中\n");
-    // 保存
-    std::string fileName = "output.ppm";
-    ppm.savePpm(fileName, colors, width, height);
+    }       
+    saveImage("output", colors);
     printf("終了\n");
 }
 
-void Renderer::checkProgress(int sampleIdx)
+void Renderer::checkProgress(int sampleNum)
 {
     const double PrintInterval = 3000;
     auto now = getTime();
-    if (getDiff(lastPrintTime, now) > PrintInterval) {
-        printf("%2.2lf%%完了…\n", getProgress(sampleIdx) * 100.0);
+    auto printDiff = getDiff(lastPrintTime, now);
+    if (printDiff > PrintInterval) {
+        auto prog = getProgress(sampleNum);
+        auto timeDiff = getDiff(startTime, now);
+        int remainingTime = (timeDiff / prog - timeDiff) / 1000;  // 秒
+        printf("%2.2lf%% 完了… 残り予測 %d時間%d分%d秒\n", prog * 100.0, remainingTime / 3600, remainingTime % 3600 / 60, remainingTime % 3600 % 60);
         lastPrintTime = now;
     }
     const double SaveInterval = 15000;
@@ -134,22 +133,33 @@ void Renderer::checkProgress(int sampleIdx)
         auto saveColors = new Spectrum[width * height];
 #pragma omp parallel for
         for (auto i = 0; i < width * height; i++) {
-            saveColors[i] = colors[i].scale(1.0 / sampleIdx);
+            saveColors[i] = colors[i].scale(1.0 / sampleNum);
         }
-        // ファイル用意
-        Ppm ppm = Ppm();
-        printf("保存\n");
-        // 保存
-        std::string fileName = "output.ppm";
-        ppm.savePpm(fileName, saveColors, width, height);
-        delete[] saveColors;
-        lastSaveTime = now;
+#pragma omp critical
+        {
+            // saveImage("output", saveColors, false, sampleNum - 1);
+            saveImage("output", saveColors);
+            delete[] saveColors;
+            lastSaveTime = now;
+        }
     }
 }
 
-double Renderer::getProgress(int sampleIdx)
+void Renderer::saveImage(std::string fileName, Spectrum *colors, bool overWritten, int index)
+{
+    std::stringstream ss;
+    ss << std::setw(4) << std::setfill('0') << index;
+    fileName += (overWritten ? "" : ("_" + ss.str())) + ".ppm";
+    // ファイル用意
+    Ppm ppm = Ppm();
+    printf("保存\n");
+    // 保存
+    ppm.savePpm(fileName, colors, width, height);
+}
+
+double Renderer::getProgress(int sampleNum)
 {;
-    return sampleIdx / (double)constants::kMAX_SAMPLING_NUM;
+    return sampleNum / (double)constants::kMAX_SAMPLING_NUM;
 }
 
 clk::time_point Renderer::getTime()
