@@ -66,6 +66,11 @@ void Spectrum::operator+=(const Spectrum &s)
     b += s.b;
 }
 
+bool Spectrum::equals(const Spectrum &s)
+{
+    return r == s.r && g == s.g && b == s.b;
+}
+
 Vec Spectrum::toColor()
 {
     int ir = (int)std::min(std::pow(r, 1.0 / DISPLAY_GAMMA) * 255, 255.0);

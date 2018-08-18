@@ -81,6 +81,10 @@ void Scene::trace(const Ray &ray, Spectrum &spectrum, int depth)
         double factor = 2.0 * constants::kPI * nearest.normal->dot(v);
         spectrum += (s * fr).scale(factor);
     }
+
+    if (!nearest.mat->emission->equals(Spectrum::Black)) {
+        spectrum += nearest.mat->emission->scale(-nearest.normal->dot(ray.dir));
+    }
 }
 
 void Scene::findNearestInterSection(const Ray &ray, Intersection &nearest)

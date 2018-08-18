@@ -21,6 +21,7 @@ public:
     Spectrum operator / (const Spectrum &s);
     void operator = (const Spectrum &s);
     void operator += (const Spectrum &s);
+    bool equals(const Spectrum &s);
     Vec toColor();
     std::string toStr();
 
