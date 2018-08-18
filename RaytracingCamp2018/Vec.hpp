@@ -2,6 +2,8 @@
 #include <cmath>
 #include <string>
 
+#include "Random.hpp"
+
 class Vec
 {
 public:
@@ -16,6 +18,7 @@ public:
     Vec refract(const Vec &n, double eta) const;
     Vec normalize() const;
     Vec scale(const double s) const;
+    Vec randomHemisphere() const;
     double len() const;
     Vec operator + (const Vec &v) const;
     Vec operator - (const Vec &v) const;

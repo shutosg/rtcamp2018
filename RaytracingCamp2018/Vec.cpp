@@ -28,12 +28,12 @@ Vec::Vec(double v)
 
 Vec Vec::neg() const
 {
-    return Vec(-x, -y, -z);
+    return *this * -1;
 }
 
 Vec Vec::reflect(const Vec &n) const
 {
-    return Vec(x, y, z) - n.scale(2 * dot(n));
+    return *this - n.scale(2 * dot(n));
 }
 
 Vec Vec::refract(const Vec &n, double eta) const
@@ -58,6 +58,22 @@ Vec Vec::scale(const double s) const
 {
     return Vec(x * s, y * s, z * s);
 }
+
+Vec Vec::randomHemisphere() const
+{
+    Random &rand = Random::get_instance();
+    Vec v = Vec(1);
+    while (v.len() > 1) {
+        v.x = rand.random(-1.0, 1.0);
+        v.y = rand.random(-1.0, 1.0);
+        v.z = rand.random(-1.0, 1.0);
+    }
+    if (v.dot(*this) < 0) {
+        v = v.neg();
+    }
+    return v.normalize();
+}
+
 
 double Vec::len() const
 {

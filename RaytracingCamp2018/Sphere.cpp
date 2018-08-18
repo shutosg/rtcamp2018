@@ -35,7 +35,7 @@ void Sphere::intersect(const Ray &ray, Intersection &isect)
 
     // 交差判定の方程式の判別式
     auto d = b * b -  c;
-    // auto d = b * b - 4 * a * c;
+
     if (d >= 0) {
         // 交点までの距離を計算
         auto s = std::sqrt(d);

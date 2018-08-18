@@ -12,26 +12,26 @@ void Renderer::initScene()
     scene.addIntersectable(new Sphere(
         1,
         new Vec(0, -2, 0.5),
-        new Material(new Spectrum(1, 1, 1), 0.3, 0.7, 1.6)
+        new Material(new Spectrum(1, 1, 1)/*, 0.3, 0.7, 1.9*/)
     ));
     scene.addIntersectable(new Sphere(
         0.8,
         new Vec(-2.0, 0.3, 0.1),
-        new Material(new Spectrum(1, 1, 1), 0.8)
+        new Material(new Spectrum(1, 1, 1)/*, 0.8*/)
     ));
     scene.addIntersectable(new Sphere(1, new Vec(1.5, -2, -1.0), new Material(new Spectrum(0.1, 0.1, 1))));
 
     // コーネルボックス
-    createCornellBox(6, 6, 8);
+    // createCornellBox(6, 6, 8);
 
     // ライトの追加
     // scene.addLight(new Light(new Vec(2.5), new Spectrum(100, 80, 80)));
     // scene.addLight(new Light(new Vec(-1.0, -2.0, 2.5), new Spectrum(80, 80, 100)));
-    scene.addLight(new Light(new Vec(0.0, 2.5, 0.0), new Spectrum(250)));
-    scene.addLight(new Light(new Vec(0.0, -2.5, 0.0), new Spectrum(30)));
+    // scene.addLight(new Light(new Vec(0.0, 2.5, 0.0), new Spectrum(250)));
+    // scene.addLight(new Light(new Vec(0.0, -2.5, 0.0), new Spectrum(30)));
 
     // 無限平面
-    // scene.addIntersectable(new Plane(new Vec(0, 1, 0), 1.5, new Material()));
+    scene.addIntersectable(new Plane(new Vec(0, 1, 0), 3, new Material()));
 }
 
 void Renderer::createCornellBox(double w, double h, double d)
