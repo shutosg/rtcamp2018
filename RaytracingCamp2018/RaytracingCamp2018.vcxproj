@@ -124,6 +124,7 @@
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Ppm.cpp" />
+    <ClCompile Include="Random.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -140,6 +141,7 @@
     <ClInclude Include="Material.hpp" />
     <ClInclude Include="Plane.hpp" />
     <ClInclude Include="Ppm.hpp" />
+    <ClInclude Include="Random.hpp" />
     <ClInclude Include="Ray.hpp" />
     <ClInclude Include="Renderer.hpp" />
     <ClInclude Include="Scene.hpp" />
