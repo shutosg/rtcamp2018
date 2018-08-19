@@ -24,6 +24,7 @@ public:
     Vec operator - (const Vec &v) const;
     Vec operator * (const Vec &v) const;
     Vec operator / (const Vec &v) const;
+    bool equals(const Vec &v) const;
     double dot(const Vec &v) const;
     Vec cross(const Vec &v) const;
     std::string toStr() const;

@@ -31,21 +31,24 @@ void Renderer::initScene()
     ));
     scene.addIntersectable(new Sphere(1, new Vec(1.5, -2, -1.0), new Material(new Spectrum(0.1, 0.1, 1))));
     scene.addIntersectable(new Sphere(1, new Vec(3, 0, 5.0), new Material(new Spectrum(0.1, 1, 0.1))));
+    scene.addIntersectable(new PolygonObject());
 
     // コーネルボックス
     // createCornellBox(6, 6, 8);
 
     // ライトの追加
-    // scene.addLight(new Light(new Vec(2.5), new Spectrum(100, 80, 80)));
-    // scene.addLight(new Light(new Vec(-1.0, -2.0, 2.5), new Spectrum(80, 80, 100)));
-    // scene.addLight(new Light(new Vec(0.0, 2.5, 0.0), new Spectrum(250)));
-    // scene.addLight(new Light(new Vec(0.0, -2.5, 0.0), new Spectrum(30)));
+#ifndef USE_PATH_TRACING
+    scene.addLight(new Light(new Vec(2.5), new Spectrum(100, 80, 80)));
+    scene.addLight(new Light(new Vec(-1.0, -2.0, 2.5), new Spectrum(80, 80, 100)));
+    scene.addLight(new Light(new Vec(0.0, 2.5, 0.0), new Spectrum(250)));
+    scene.addLight(new Light(new Vec(0.0, -2.5, 0.0), new Spectrum(30)));
+#else
     scene.addIntersectable(new Sphere(
         1,
         new Vec(0, 3.5, 0),
         new Material(new Spectrum(1, 1, 1), new Spectrum(25))
     ));
-
+#endif
     // 無限平面
     scene.addIntersectable(new Plane(new Vec(0, 1, 0), 3, new Material()));
 }

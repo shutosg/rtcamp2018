@@ -1,9 +1,12 @@
 ﻿#pragma once
 
+#define USE_PATH_TRACING
+
 #include <vector>
 
 #include "IIntersectable.hpp"
 #include "Sphere.hpp"
+#include "PolygonObject.hpp"
 #include "Plane.hpp"
 #include "Light.hpp"
 #include "constant.h"

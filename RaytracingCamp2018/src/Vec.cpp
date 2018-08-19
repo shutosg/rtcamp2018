@@ -100,6 +100,11 @@ Vec Vec::operator*(const Vec &v) const
     return Vec(x * v.x, y * v.y, z * v.z);
 }
 
+bool Vec::equals(const Vec &v) const
+{
+    return x == v.x && y == v.y && z == v.z;
+}
+
 double Vec::dot(const Vec &v) const
 {
     return x * v.x + y * v.y + z * v.z;

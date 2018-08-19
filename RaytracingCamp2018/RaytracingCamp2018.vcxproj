@@ -136,6 +136,7 @@
     <ClCompile Include="src\Material.cpp" />
     <ClCompile Include="src\Plane.cpp" />
     <ClCompile Include="src\Image.cpp" />
+    <ClCompile Include="src\PolygonObject.cpp" />
     <ClCompile Include="src\Random.cpp" />
     <ClCompile Include="src\Ray.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
@@ -154,6 +155,7 @@
     <ClInclude Include="src\Material.hpp" />
     <ClInclude Include="src\Plane.hpp" />
     <ClInclude Include="src\Image.hpp" />
+    <ClInclude Include="src\PolygonObject.hpp" />
     <ClInclude Include="src\Random.hpp" />
     <ClInclude Include="src\Ray.hpp" />
     <ClInclude Include="src\Renderer.hpp" />

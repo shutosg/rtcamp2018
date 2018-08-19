@@ -74,12 +74,18 @@ void Scene::trace(const Ray &ray, Spectrum &spectrum, int depth)
     // 拡散反射
     auto kd = 1.0 - ks - kt;
     if (kd > 0) {
+#ifdef USE_PATH_TRACING
         Spectrum s(Spectrum::Black);
         auto v = nearest.normal->randomHemisphere();
         trace(Ray(*nearest.point, v, true), s, depth + 1);
         auto fr = nearest.mat->diffuse->scale(1.0 / constants::kPI);
         double factor = 2.0 * constants::kPI * nearest.normal->dot(v);
         spectrum += (s * fr).scale(factor);
+#else
+        for (auto i = 0; i < lights->size(); i++) {
+            diffuseLighting(*nearest.point, *nearest.normal, *lights->at(i), *nearest.mat->diffuse, spectrum); 
+        }
+#endif
     }
 
     if (!nearest.mat->emission->equals(Spectrum::Black)) {
