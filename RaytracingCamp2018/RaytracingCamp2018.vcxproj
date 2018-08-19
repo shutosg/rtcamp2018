@@ -76,6 +76,9 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>STB_IMAGE_WRITE_IMPLEMENTATION
+;STBI_MSC_SECURE_CRT
+;STB_IMAGE_WRITE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -84,6 +87,9 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>STB_IMAGE_WRITE_IMPLEMENTATION
+;STBI_MSC_SECURE_CRT
+;STB_IMAGE_WRITE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -94,6 +100,9 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>STB_IMAGE_WRITE_IMPLEMENTATION
+;STBI_MSC_SECURE_CRT
+;STB_IMAGE_WRITE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -110,6 +119,9 @@
       <ConformanceMode>true</ConformanceMode>
       <OpenMPSupport>true</OpenMPSupport>
       <AdditionalOptions>/Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
+      <PreprocessorDefinitions>STB_IMAGE_WRITE_IMPLEMENTATION
+;STBI_MSC_SECURE_CRT
+;STB_IMAGE_WRITE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -123,7 +135,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Material.cpp" />
     <ClCompile Include="src\Plane.cpp" />
-    <ClCompile Include="src\Ppm.cpp" />
+    <ClCompile Include="src\Image.cpp" />
     <ClCompile Include="src\Random.cpp" />
     <ClCompile Include="src\Ray.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
@@ -133,6 +145,7 @@
     <ClCompile Include="src\Vec.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="external\stb\stb_image_write.h" />
     <ClInclude Include="src\Camera.hpp" />
     <ClInclude Include="src\constant.h" />
     <ClInclude Include="src\IIntersectable.hpp" />
@@ -140,7 +153,7 @@
     <ClInclude Include="src\Light.hpp" />
     <ClInclude Include="src\Material.hpp" />
     <ClInclude Include="src\Plane.hpp" />
-    <ClInclude Include="src\Ppm.hpp" />
+    <ClInclude Include="src\Image.hpp" />
     <ClInclude Include="src\Random.hpp" />
     <ClInclude Include="src\Ray.hpp" />
     <ClInclude Include="src\Renderer.hpp" />

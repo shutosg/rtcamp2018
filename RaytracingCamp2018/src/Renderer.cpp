@@ -149,12 +149,12 @@ void Renderer::saveImage(std::string fileName, Spectrum *colors, bool overWritte
 {
     std::stringstream ss;
     ss << std::setw(4) << std::setfill('0') << index;
-    fileName += (overWritten ? "" : ("_" + ss.str())) + ".ppm";
+    fileName += overWritten ? "" : ("_" + ss.str());
     // ファイル用意
-    Ppm ppm = Ppm();
+    Image image = Image();
     printf("保存\n");
     // 保存
-    ppm.savePpm(fileName, colors, width, height);
+    image.savePng(fileName, colors, width, height);
 }
 
 double Renderer::getProgress(int sampleNum)

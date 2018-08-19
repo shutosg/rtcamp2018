@@ -7,13 +7,15 @@
 #include <direct.h>
 #include "Spectrum.hpp"
 
-class Ppm
+class Image
 {
 public:
-    Ppm();
+    Image();
     void savePpm(std::string &fileName, Spectrum *colors, int width, int height);
+    void savePng(std::string &fileName, Spectrum *colors, int width, int height);
 
 private:
     const std::string saveFolder = std::string("render\\");
+    void checkDirectory();
 };
 

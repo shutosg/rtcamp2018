@@ -5,7 +5,7 @@
 #include <sstream>
 #include <iomanip>
 #include <chrono>
-#include "Ppm.hpp"
+#include "Image.hpp"
 #include "Camera.hpp"
 #include "Scene.hpp"
 #include "constant.h"
