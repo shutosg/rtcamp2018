@@ -117,37 +117,37 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Intersection.cpp" />
-    <ClCompile Include="Light.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Material.cpp" />
-    <ClCompile Include="Plane.cpp" />
-    <ClCompile Include="Ppm.cpp" />
-    <ClCompile Include="Random.cpp" />
-    <ClCompile Include="Ray.cpp" />
-    <ClCompile Include="Renderer.cpp" />
-    <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="Spectrum.cpp" />
-    <ClCompile Include="Sphere.cpp" />
-    <ClCompile Include="Vec.cpp" />
+    <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\Intersection.cpp" />
+    <ClCompile Include="src\Light.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Material.cpp" />
+    <ClCompile Include="src\Plane.cpp" />
+    <ClCompile Include="src\Ppm.cpp" />
+    <ClCompile Include="src\Random.cpp" />
+    <ClCompile Include="src\Ray.cpp" />
+    <ClCompile Include="src\Renderer.cpp" />
+    <ClCompile Include="src\Scene.cpp" />
+    <ClCompile Include="src\Spectrum.cpp" />
+    <ClCompile Include="src\Sphere.cpp" />
+    <ClCompile Include="src\Vec.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.hpp" />
-    <ClInclude Include="constant.h" />
-    <ClInclude Include="IIntersectable.hpp" />
-    <ClInclude Include="Intersection.hpp" />
-    <ClInclude Include="Light.hpp" />
-    <ClInclude Include="Material.hpp" />
-    <ClInclude Include="Plane.hpp" />
-    <ClInclude Include="Ppm.hpp" />
-    <ClInclude Include="Random.hpp" />
-    <ClInclude Include="Ray.hpp" />
-    <ClInclude Include="Renderer.hpp" />
-    <ClInclude Include="Scene.hpp" />
-    <ClInclude Include="Spectrum.hpp" />
-    <ClInclude Include="Sphere.hpp" />
-    <ClInclude Include="Vec.hpp" />
+    <ClInclude Include="src\Camera.hpp" />
+    <ClInclude Include="src\constant.h" />
+    <ClInclude Include="src\IIntersectable.hpp" />
+    <ClInclude Include="src\Intersection.hpp" />
+    <ClInclude Include="src\Light.hpp" />
+    <ClInclude Include="src\Material.hpp" />
+    <ClInclude Include="src\Plane.hpp" />
+    <ClInclude Include="src\Ppm.hpp" />
+    <ClInclude Include="src\Random.hpp" />
+    <ClInclude Include="src\Ray.hpp" />
+    <ClInclude Include="src\Renderer.hpp" />
+    <ClInclude Include="src\Scene.hpp" />
+    <ClInclude Include="src\Spectrum.hpp" />
+    <ClInclude Include="src\Sphere.hpp" />
+    <ClInclude Include="src\Vec.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
