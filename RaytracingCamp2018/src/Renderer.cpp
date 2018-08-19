@@ -21,7 +21,7 @@ void Renderer::initScene()
     // 球の追加
     scene.addIntersectable(new Sphere(
         1,
-        new Vec(0, -2, 0.25),
+        new Vec(0, -2, 0),
         new Material(new Spectrum(1, 1, 1), 0.2, 0.8, 1.9)
     ));
     scene.addIntersectable(new Sphere(
@@ -30,9 +30,10 @@ void Renderer::initScene()
         new Material(new Spectrum(0.1, 0.5, 1), 0.9)
     ));
     scene.addIntersectable(new Sphere(1, new Vec(1.5, -2, -1.0), new Material(new Spectrum(0.1, 0.1, 1))));
+    scene.addIntersectable(new Sphere(1, new Vec(3, 0, 5.0), new Material(new Spectrum(0.1, 1, 0.1))));
 
     // コーネルボックス
-    createCornellBox(6, 6, 8);
+    // createCornellBox(6, 6, 8);
 
     // ライトの追加
     // scene.addLight(new Light(new Vec(2.5), new Spectrum(100, 80, 80)));
@@ -42,11 +43,11 @@ void Renderer::initScene()
     scene.addIntersectable(new Sphere(
         1,
         new Vec(0, 3.5, 0),
-        new Material(new Spectrum(1, 0, 1), new Spectrum(25))
+        new Material(new Spectrum(1, 1, 1), new Spectrum(25))
     ));
 
     // 無限平面
-    // scene.addIntersectable(new Plane(new Vec(0, 1, 0), 3, new Material()));
+    scene.addIntersectable(new Plane(new Vec(0, 1, 0), 3, new Material()));
 }
 
 void Renderer::createCornellBox(double w, double h, double d)
@@ -55,11 +56,11 @@ void Renderer::createCornellBox(double w, double h, double d)
     auto x = a + w / 2;
     auto y = a + h / 2;
     auto z = a + d / 2;
-    scene.addIntersectable(new Sphere(a, new Vec(+x, 0, 0), new Material(new Spectrum(0, 0.95, 0))));
-    scene.addIntersectable(new Sphere(a, new Vec(-x, 0, 0), new Material(new Spectrum(0.95, 0, 0))));
-    scene.addIntersectable(new Sphere(a, new Vec(0, +y, 0), new Material(new Spectrum(0.95))));
-    scene.addIntersectable(new Sphere(a, new Vec(0, -y, 0), new Material(new Spectrum(0.95))));
-    scene.addIntersectable(new Sphere(a, new Vec(0, 0, -z), new Material(new Spectrum(0.95))));
+    scene.addIntersectable(new Sphere(a, new Vec(+x, 0, 0), new Material(new Spectrum(0, 0.95, 0), new Spectrum(0.1))));
+    scene.addIntersectable(new Sphere(a, new Vec(-x, 0, 0), new Material(new Spectrum(0.95, 0, 0), new Spectrum(0.1))));
+    scene.addIntersectable(new Sphere(a, new Vec(0, +y, 0), new Material(new Spectrum(0.95), new Spectrum(0.1))));
+    scene.addIntersectable(new Sphere(a, new Vec(0, -y, 0), new Material(new Spectrum(0.95), new Spectrum(0.1))));
+    scene.addIntersectable(new Sphere(a, new Vec(0, 0, -z), new Material(new Spectrum(0.95), new Spectrum(0.1))));
 }
 
 void Renderer::initTimer()
@@ -84,6 +85,8 @@ void Renderer::startRendering()
         Vec(0, 0, -1),
         Vec(0, 1, 0),
         1.5,
+        9.5,
+        0.025,
         aspect
     );
 
