@@ -19,6 +19,7 @@ public:
     void addIntersectable(IIntersectable *obj);
     void addLight(Light *light);
     void trace(const Ray &ray, Spectrum &spectrum, int depth = 0);
+    void intersectSurface(const Vec &dir, const Intersection &isect, Spectrum &spectrum, double eta, int depth);
 
 private:
     std::vector<IIntersectable*> *objs;

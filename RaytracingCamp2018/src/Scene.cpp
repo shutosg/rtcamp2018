@@ -44,52 +44,56 @@ void Scene::trace(const Ray &ray, Spectrum &spectrum, int depth)
         return;
     }
 
+    // 物体の外部からの交差
+    if (nearest.normal->dot(ray.dir) < 0) {
+        intersectSurface(ray.dir, nearest, spectrum, constants::kVACUUM_REFRACTIVE_INDEX / nearest.mat->refractiveIndex, depth);
+        if (!nearest.mat->emission->equals(Spectrum::Black)) {
+            spectrum += nearest.mat->emission->scale(-nearest.normal->dot(ray.dir));
+        }
+    } else {
+        // 物体の内部からの交差
+        // 屈折レイ
+        *nearest.normal = nearest.normal->neg();
+        intersectSurface(ray.dir, nearest, spectrum, nearest.mat->refractiveIndex / constants::kVACUUM_REFRACTIVE_INDEX, depth);
+    }
+}
+
+
+void Scene::intersectSurface(const Vec &dir, const Intersection &isect, Spectrum &spectrum, double eta, int depth)
+{
     // 鏡面反射
-    auto ks = nearest.mat->reflective;
+    auto ks = isect.mat->reflective;
     if (ks > 0) {
         // 反射レイ
-        auto reflect = ray.dir.reflect(*nearest.normal);
+        auto reflect = dir.reflect(*isect.normal);
         Spectrum s(Spectrum::Black);
-        trace(Ray(*nearest.point, reflect.normalize(), true), s, depth + 1);
-        spectrum += s.scale(ks) * *nearest.mat->diffuse;
+        trace(Ray(*isect.point, reflect.normalize(), true), s, depth + 1);
+        spectrum += s.scale(ks) * *isect.mat->diffuse;
     }
     // 屈折
-    auto kt = nearest.mat->refractive;
+    auto kt = isect.mat->refractive;
     if (kt > 0) {
-        // 物体の外部からの交差
-        if (nearest.normal->dot(ray.dir) < 0) {
-            // 屈折レイ
-            auto refract = ray.dir.refract(*nearest.normal, constants::kVACUUM_REFRACTIVE_INDEX / nearest.mat->refractiveIndex);
-            Spectrum s(Spectrum::Black);
-            trace(Ray(*nearest.point, refract.normalize(), true), s, depth + 1);
-            spectrum += s.scale(kt) * *nearest.mat->diffuse;
-        }
-        else {
-            // 物体の内部からの交差
-            // 屈折レイ
-            auto refract = ray.dir.refract(nearest.normal->neg(), nearest.mat->refractiveIndex / constants::kVACUUM_REFRACTIVE_INDEX);
-            trace(Ray(*nearest.point, refract.normalize(), true), spectrum, depth + 1);
-        }
+        // 屈折レイ
+        auto refract = dir.refract(*isect.normal, eta);
+        Spectrum s(Spectrum::Black);
+        trace(Ray(*isect.point, refract.normalize(), true), s, depth + 1);
+        spectrum += s.scale(kt) * *isect.mat->diffuse;
     }
     // 拡散反射
     auto kd = 1.0 - ks - kt;
     if (kd > 0) {
 #ifdef USE_PATH_TRACING
         Spectrum s(Spectrum::Black);
-        auto v = nearest.normal->randomHemisphere();
-        trace(Ray(*nearest.point, v, true), s, depth + 1);
-        auto fr = nearest.mat->diffuse->scale(1.0 / constants::kPI);
-        double factor = 2.0 * constants::kPI * nearest.normal->dot(v);
+        auto v = isect.normal->randomHemisphere();
+        trace(Ray(*isect.point, v, true), s, depth + 1);
+        auto fr = isect.mat->diffuse->scale(1.0 / constants::kPI);
+        double factor = 2.0 * constants::kPI * isect.normal->dot(v);
         spectrum += (s * fr).scale(factor);
 #else
         for (auto i = 0; i < lights->size(); i++) {
-            diffuseLighting(*nearest.point, *nearest.normal, *lights->at(i), *nearest.mat->diffuse, spectrum); 
+            diffuseLighting(*isect.point, *isect.normal, *lights->at(i), *isect.mat->diffuse, spectrum);
         }
 #endif
-    }
-
-    if (!nearest.mat->emission->equals(Spectrum::Black)) {
-        spectrum += nearest.mat->emission->scale(-nearest.normal->dot(ray.dir));
     }
 }
 
