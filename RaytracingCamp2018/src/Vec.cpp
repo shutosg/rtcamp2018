@@ -33,20 +33,20 @@ Vec Vec::neg() const
 
 Vec Vec::reflect(const Vec &n) const
 {
-    return *this - n.scale(2 * dot(n));
+    return *this - n.scale(2 * this->dot(n));
 }
 
 Vec Vec::refract(const Vec &n, double eta) const
 {
-    auto dot = Vec::dot(n);
-    auto d = 1.0 - eta * eta * (1.0 - dot * dot);
+    auto dot = this->dot(n);
+    auto d = 1.0 - std::pow(eta, 2) * (1.0 - std::pow(dot, 2));
     if (d > 0) {
-        Vec a = (operator-(n.scale(dot))).scale(eta);
-        Vec b = n.scale(d * d);
+        auto a = (*this - n.scale(dot)).scale(eta);
+        auto b = n.scale(std::sqrt(d));
         return a - b;
     }
     // 全反射
-    return reflect(n);
+    return this->reflect(n);
 }
 
 Vec Vec::normalize() const
