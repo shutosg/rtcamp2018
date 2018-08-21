@@ -61,27 +61,25 @@ void Scene::trace(const Ray &ray, Spectrum &spectrum, int depth)
 
 void Scene::intersectSurface(const Vec &dir, const Intersection &isect, Spectrum &spectrum, double eta, int depth)
 {
-    // 鏡面反射
+    // トレース数削減のため、鏡面、屈折、拡散のどれか一つだけトレースする
+    auto t = Random::get_instance().random();
     auto ks = isect.mat->reflective;
-    if (ks > 0) {
-        // 反射レイ
+    auto kt = isect.mat->refractive;
+    auto kd = 1.0 - ks - kt;
+    if (t < ks) {
+        // 鏡面反射
         auto reflect = dir.reflect(*isect.normal);
         Spectrum s(Spectrum::Black);
         trace(Ray(*isect.point, reflect.normalize(), true), s, depth + 1);
         spectrum += s.scale(ks) * *isect.mat->diffuse;
-    }
-    // 屈折
-    auto kt = isect.mat->refractive;
-    if (kt > 0) {
-        // 屈折レイ
+    } else if (t < ks + kt) {
+        // 屈折
         auto refract = dir.refract(*isect.normal, eta);
         Spectrum s(Spectrum::Black);
         trace(Ray(*isect.point, refract.normalize(), true), s, depth + 1);
         spectrum += s.scale(kt) * *isect.mat->diffuse;
-    }
-    // 拡散反射
-    auto kd = 1.0 - ks - kt;
-    if (kd > 0) {
+    } else {
+        // 拡散反射
 #ifdef USE_PATH_TRACING
         Spectrum s(Spectrum::Black);
         auto v = isect.normal->randomHemisphere();
