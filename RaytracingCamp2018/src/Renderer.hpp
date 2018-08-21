@@ -5,10 +5,12 @@
 #include <sstream>
 #include <iomanip>
 #include <chrono>
+
 #include "Image.hpp"
 #include "Camera.hpp"
 #include "Scene.hpp"
 #include "constant.h"
+#include "ObjLoader.hpp"
 
 using clk = std::chrono::system_clock;
 

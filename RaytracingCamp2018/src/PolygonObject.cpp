@@ -1,6 +1,8 @@
 ﻿#include "PolygonObject.hpp"
 
-
+#include <fstream>
+#include <iostream>
+#include <vector>
 
 PolygonObject::PolygonObject()
 {
@@ -20,6 +22,26 @@ PolygonObject::PolygonObject()
     isSingleSide = true;
 }
 
+PolygonObject::PolygonObject(const ObjLoader &loader)
+{
+    // objloaderからデータをコピー
+    // 頂点情報
+    vertNum = loader.vertices->size();
+    vertices = new Vec*[vertNum];
+    for (auto i = 0; i < vertNum; i++) {
+        vertices[i] = new Vec(*loader.vertices->at(i));
+    }
+    // 面情報
+    polyNum = loader.faceIndexes->size();
+    faceIndexes = new int[polyNum];
+    faceIndexes = loader.faceIndexes->data();
+    verticesIndexes = new int[loader.verticesIndexes->size()];
+    verticesIndexes = loader.verticesIndexes->data();
+
+    // その他
+    mat = new Material(new Spectrum(1, 0, 0));
+    isSingleSide = mat->refractive == 0;
+}
 
 PolygonObject::~PolygonObject()
 {
@@ -34,9 +56,28 @@ PolygonObject::~PolygonObject()
 
 void PolygonObject::intersect(const Ray &ray, Intersection &isect)
 {
-    if (intersectTryangle(ray, *vertices[0], *vertices[1], *vertices[2], isect)) {
-        *isect.mat = *mat;
+    // 総当たりで最も近くで交差した点を求める
+    Intersection nearest;
+    for (auto polyIdx = 0; polyIdx < polyNum; polyIdx++) {
+        Intersection tmp;
+        Vec *v0, *v1, *v2;
+        getVertexes(polyIdx, v0, v1, v2);
+        if (intersectTryangle(ray, *v0, *v1, *v2, tmp) && tmp.t < nearest.t) {
+            nearest = tmp;
+        }
     }
+    isect.t = nearest.t;
+    *isect.mat = *mat;
+    *isect.normal = *nearest.normal;
+    *isect.point = *nearest.point;
+}
+
+void PolygonObject::getVertexes(int polyIdx, Vec *&v0, Vec *&v1, Vec *&v2)
+{
+    // NOTE: 頂点idは1始まり
+    v0 = vertices[verticesIndexes[polyIdx * 3 + 0] - 1];
+    v1 = vertices[verticesIndexes[polyIdx * 3 + 1] - 1];
+    v2 = vertices[verticesIndexes[polyIdx * 3 + 2] - 1];
 }
 
 bool PolygonObject::intersectTryangle(const Ray &ray, const Vec &v0, const Vec &v1, const Vec &v2, Intersection &isect)
