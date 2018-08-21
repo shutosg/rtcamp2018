@@ -1,7 +1,18 @@
 ﻿#pragma once
 
+// #define POLYGON_BVH
+
 #include "IIntersectable.hpp"
 #include "ObjLoader.hpp"
+#include "Bvh.hpp"
+
+
+struct Triangle
+{
+    Vec *v[3];    // vertexes
+    int vIdx[3];  // vertexIndexes
+};
+
 
 class PolygonObject : public IIntersectable
 {
@@ -14,9 +25,8 @@ public:
 private:
     Vec **vertices;
     int vertNum;
-    int polyNum;
-    int *faceIndexes;
     int *verticesIndexes;
+    vector<Triangle> triangles;
     bool isSingleSide;
     Material *mat;
 

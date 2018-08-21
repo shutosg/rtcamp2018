@@ -11,9 +11,6 @@ PolygonObject::PolygonObject()
     vertices[0] = new Vec(0.5, 0.5, 0.1);
     vertices[1] = new Vec(0, 0.5, 0.2);
     vertices[2] = new Vec(0, 0, 0.1);
-    polyNum = 1;
-    faceIndexes = new int[1];
-    faceIndexes[0] = 3;
     verticesIndexes = new int[3];
     verticesIndexes[0] = 0;
     verticesIndexes[1] = 1;
@@ -32,11 +29,20 @@ PolygonObject::PolygonObject(const ObjLoader &loader, const Vec &pos, const Vec 
         vertices[i] = new Vec(*loader.vertices->at(i));
     }
     // 面情報
-    polyNum = loader.faceIndexes->size();
-    faceIndexes = new int[polyNum];
-    faceIndexes = loader.faceIndexes->data();
     verticesIndexes = new int[loader.verticesIndexes->size()];
     verticesIndexes = loader.verticesIndexes->data();
+    int polyNum = loader.faceIndexes->size();
+    for (auto i = 0; i < polyNum * 3; i += 3) {
+        Triangle t;
+        t.vIdx[0] = verticesIndexes[i + 0];
+        t.vIdx[1] = verticesIndexes[i + 1];
+        t.vIdx[2] = verticesIndexes[i + 2];
+        // NOTE: verticesIndexは1始まりなので配列のアクセスには1引いた値を使う
+        t.v[0] = vertices[t.vIdx[0] - 1];
+        t.v[1] = vertices[t.vIdx[1] - 1];
+        t.v[2] = vertices[t.vIdx[2] - 1];
+        triangles.push_back(t);
+    }
 
     // その他
     mat = new Material(new Spectrum(1, 0, 0));
@@ -54,20 +60,18 @@ PolygonObject::~PolygonObject()
         delete vertices[i];
     }
     delete vertices;
-    delete faceIndexes;
     delete verticesIndexes;
     delete mat;
+    triangles.clear();
 }
 
 void PolygonObject::intersect(const Ray &ray, Intersection &isect)
 {
     // 総当たりで最も近くで交差した点を求める
     Intersection nearest;
-    for (auto polyIdx = 0; polyIdx < polyNum; polyIdx++) {
+    for (auto t : triangles) {
         Intersection tmp;
-        Vec *v0, *v1, *v2;
-        getVertexes(polyIdx, v0, v1, v2);
-        if (intersectTryangle(ray, *v0, *v1, *v2, tmp) && tmp.t < nearest.t) {
+        if (intersectTryangle(ray, *t.v[0], *t.v[1], *t.v[2], tmp) && tmp.t < nearest.t) {
             nearest = tmp;
         }
     }
@@ -75,14 +79,6 @@ void PolygonObject::intersect(const Ray &ray, Intersection &isect)
     *isect.mat = *mat;
     *isect.normal = *nearest.normal;
     *isect.point = *nearest.point;
-}
-
-void PolygonObject::getVertexes(int polyIdx, Vec *&v0, Vec *&v1, Vec *&v2)
-{
-    // NOTE: 頂点idは1始まり
-    v0 = vertices[verticesIndexes[polyIdx * 3 + 0] - 1];
-    v1 = vertices[verticesIndexes[polyIdx * 3 + 1] - 1];
-    v2 = vertices[verticesIndexes[polyIdx * 3 + 2] - 1];
 }
 
 bool PolygonObject::intersectTryangle(const Ray &ray, const Vec &v0, const Vec &v1, const Vec &v2, Intersection &isect)
