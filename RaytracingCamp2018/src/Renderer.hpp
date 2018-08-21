@@ -29,6 +29,7 @@ private:
     clk::time_point startTime;
     clk::time_point lastPrintTime;
     clk::time_point lastSaveTime;
+    int lastSaveSampleNum;
 
     void initScene();
     void initTimer();

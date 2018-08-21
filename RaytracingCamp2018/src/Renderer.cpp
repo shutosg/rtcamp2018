@@ -72,6 +72,7 @@ void Renderer::initTimer()
     lastPrintTime = getTime();
     lastSaveTime = getTime();
     startTime = getTime();
+    lastSaveSampleNum = 0;
 }
 
 void Renderer::startRendering()
@@ -135,8 +136,9 @@ void Renderer::checkProgress(int sampleNum)
         printf("%2.2lf%% 完了… 残り予測 %d時間%d分%d秒\n", prog * 100.0, remainingTime / 3600, remainingTime % 3600 / 60, remainingTime % 3600 % 60);
         lastPrintTime = now;
     }
-    const double SaveInterval = 15000;
-    if (getDiff(lastSaveTime, now) > SaveInterval) {
+    const double SaveIntervalTime = 15000;
+    const int SaveIntervalSampleNum = 5;
+    if (getDiff(lastSaveTime, now) > SaveIntervalTime || sampleNum - lastSaveSampleNum >= SaveIntervalSampleNum) {
         auto saveColors = new Spectrum[width * height];
 #pragma omp parallel for
         for (auto i = 0; i < width * height; i++) {
@@ -148,6 +150,7 @@ void Renderer::checkProgress(int sampleNum)
             saveImage("output", saveColors);
             delete[] saveColors;
             lastSaveTime = now;
+            lastSaveSampleNum = sampleNum;
         }
     }
 }
