@@ -2,6 +2,7 @@
 #include <cmath>
 #include <string>
 
+#include "constant.h"
 #include "Random.hpp"
 
 class Vec
@@ -18,6 +19,7 @@ public:
     Vec refract(const Vec &n, double eta) const;
     Vec normalize() const;
     Vec scale(const double s) const;
+    Vec rotation(const Vec &rot, bool isDegree = true);
     Vec randomHemisphere() const;
     double len() const;
     Vec operator + (const Vec &v) const;

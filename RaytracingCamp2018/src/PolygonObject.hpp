@@ -7,7 +7,7 @@ class PolygonObject : public IIntersectable
 {
 public:
     PolygonObject();
-    PolygonObject(const ObjLoader &loader);
+    PolygonObject(const ObjLoader &loader, const Vec &pos = Vec(0), const Vec &scale = Vec(1), const Vec &rot = Vec(0));
     ~PolygonObject();
     void intersect(const Ray &ray, Intersection &isect);
 

@@ -22,7 +22,7 @@ PolygonObject::PolygonObject()
     isSingleSide = true;
 }
 
-PolygonObject::PolygonObject(const ObjLoader &loader)
+PolygonObject::PolygonObject(const ObjLoader &loader, const Vec &pos, const Vec &scale, const Vec &rot)
 {
     // objloaderからデータをコピー
     // 頂点情報
@@ -41,6 +41,11 @@ PolygonObject::PolygonObject(const ObjLoader &loader)
     // その他
     mat = new Material(new Spectrum(1, 0, 0));
     isSingleSide = mat->refractive == 0;
+
+    // トランスフォーム
+    for (auto i = 0; i < vertNum; i++) {
+        *vertices[i] = (*vertices[i] * scale).rotation(rot) + pos;
+    }
 }
 
 PolygonObject::~PolygonObject()

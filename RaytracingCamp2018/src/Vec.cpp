@@ -59,6 +59,21 @@ Vec Vec::scale(const double s) const
     return Vec(x * s, y * s, z * s);
 }
 
+Vec Vec::rotation(const Vec &rot, bool isDegree)
+{
+    auto thete = isDegree ? Vec(rot) * constants::kPI / 180.0 : Vec(rot);
+    auto sinX = std::sin(thete.x);
+    auto sinY = std::sin(thete.y);
+    auto sinZ = std::sin(thete.z);
+    auto cosX = std::cos(thete.x);
+    auto cosY = std::cos(thete.y);
+    auto cosZ = std::cos(thete.z);
+    auto newX = (cosX * cosY * cosZ - sinX * sinZ) * x - (cosX * cosY * sinZ + sinX * cosZ) * y + cosX * sinY * z;
+    auto newY = (sinX * cosY * cosZ + cosX * sinZ) * x - (sinX * cosY * sinZ - cosX * cosZ) * y + sinX * sinY * z;
+    auto newZ =                      - sinY * cosZ * x                        + sinY * sinZ * y        + cosY * z;
+    return Vec(newX, newY, newZ);
+}
+
 Vec Vec::randomHemisphere() const
 {
     Random &rand = Random::get_instance();
