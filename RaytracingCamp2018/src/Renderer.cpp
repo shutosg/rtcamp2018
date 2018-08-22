@@ -32,7 +32,14 @@ void Renderer::initScene()
     scene.addIntersectable(new Sphere(1, new Vec(1.5, -2, -1.0), new Material(new Spectrum(0.1, 0.1, 1))));
     scene.addIntersectable(new Sphere(1, new Vec(3, 0, 5.0), new Material(new Spectrum(0.1, 1, 0.1))));
     ObjLoader platonic("resources\\Platonic.obj");
-    scene.addIntersectable(new PolygonObject(platonic));
+    scene.addIntersectable(
+        new PolygonObject(
+            platonic,
+            Vec(2, -1, 0),
+            Vec(1.5),
+            Vec(0, 50, 0),
+            new Material(new Spectrum(1), 0.1, 0.9, 1.8)
+        ));
 
     // コーネルボックス
     // createCornellBox(6, 6, 8);
