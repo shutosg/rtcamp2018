@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\AABBox.cpp" />
+    <ClCompile Include="src\Bvh.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\Image.cpp" />
     <ClCompile Include="src\Intersection.cpp" />
@@ -38,6 +40,8 @@
     <ClCompile Include="src\Vec.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\AABBox.hpp" />
+    <ClInclude Include="src\Bvh.hpp" />
     <ClInclude Include="src\Camera.hpp" />
     <ClInclude Include="src\constant.h" />
     <ClInclude Include="src\IIntersectable.hpp" />
@@ -54,6 +58,7 @@
     <ClInclude Include="src\Scene.hpp" />
     <ClInclude Include="src\Spectrum.hpp" />
     <ClInclude Include="src\Sphere.hpp" />
+    <ClInclude Include="src\Triangle.hpp" />
     <ClInclude Include="src\utils.h" />
     <ClInclude Include="src\Vec.hpp" />
   </ItemGroup>

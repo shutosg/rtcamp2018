@@ -134,6 +134,24 @@ Vec Vec::cross(const Vec &v) const
     );
 }
 
+Vec Vec::min(const Vec &v) const
+{
+    return Vec(
+        std::min(x, v.x),
+        std::min(y, v.y),
+        std::min(z, v.z)
+    );
+}
+
+Vec Vec::max(const Vec &v) const
+{
+    return Vec(
+        std::max(x, v.x),
+        std::max(y, v.y),
+        std::max(z, v.z)
+    );
+}
+
 std::string Vec::toStr() const
 {
     return "Vec(" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ")";

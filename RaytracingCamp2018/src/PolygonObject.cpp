@@ -52,6 +52,11 @@ PolygonObject::PolygonObject(const ObjLoader &loader, const Vec &pos, const Vec 
     for (auto i = 0; i < vertNum; i++) {
         *vertices[i] = (*vertices[i] * scale).rotation(rot) + pos;
     }
+#ifdef POLYGON_BVH
+    // BVHを構築
+    constructBVH();
+#endif
+
 }
 
 PolygonObject::~PolygonObject()
@@ -63,22 +68,35 @@ PolygonObject::~PolygonObject()
     delete verticesIndexes;
     delete mat;
     triangles.clear();
+#ifdef POLYGON_BVH
+    // BVH全ノードに対して責任を負う
+    nodeList->clear();
+#endif
 }
 
 void PolygonObject::intersect(const Ray &ray, Intersection &isect)
 {
-    // 総当たりで最も近くで交差した点を求める
     Intersection nearest;
+#ifdef POLYGON_BVH
+    // 実際に交差を調べるポリゴンの候補を調べる
+    // ルートノードのfindCandidatesを呼べば再帰的に調べてくれる
+    auto candidates = nodeList->at(0)->findCandidates(ray);
+    for (auto t : candidates) {
+#else
+    // 総当たりで最も近くで交差した点を求める
     for (auto t : triangles) {
+#endif
         Intersection tmp;
         if (intersectTryangle(ray, *t.v[0], *t.v[1], *t.v[2], tmp) && tmp.t < nearest.t) {
             nearest = tmp;
         }
     }
-    isect.t = nearest.t;
-    *isect.mat = *mat;
-    *isect.normal = *nearest.normal;
-    *isect.point = *nearest.point;
+    if (nearest.isHit()) {
+        isect.t = nearest.t;
+        *isect.mat = *mat;
+        *isect.normal = *nearest.normal;
+        *isect.point = *nearest.point;
+    }
 }
 
 bool PolygonObject::intersectTryangle(const Ray &ray, const Vec &v0, const Vec &v1, const Vec &v2, Intersection &isect)
@@ -133,3 +151,12 @@ bool PolygonObject::intersectTryangle(const Ray &ray, const Vec &v0, const Vec &
     *isect.point = point;
     return true;
 }
+
+#ifdef POLYGON_BVH
+void PolygonObject::constructBVH()
+{
+    nodeList = new vector<Bvh*>();
+    nodeList->push_back(new Bvh(triangles, *nodeList));
+}
+
+#endif

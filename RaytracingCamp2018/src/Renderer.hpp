@@ -39,5 +39,6 @@ private:
     void checkProgress(int sampleIdx);
     clk::time_point getTime();
     double getDiff(clk::time_point start, clk::time_point end);
+    std::string timeFormat(double millisec);
 };
 

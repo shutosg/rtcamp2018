@@ -18,6 +18,8 @@
     <ClCompile Include="src\Sphere.cpp" />
     <ClCompile Include="src\Vec.cpp" />
     <ClCompile Include="src\utils.cpp" />
+    <ClCompile Include="src\Bvh.cpp" />
+    <ClCompile Include="src\AABBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Camera.hpp" />
@@ -38,5 +40,8 @@
     <ClInclude Include="src\Sphere.hpp" />
     <ClInclude Include="src\Vec.hpp" />
     <ClInclude Include="src\utils.h" />
+    <ClInclude Include="src\Bvh.hpp" />
+    <ClInclude Include="src\Triangle.hpp" />
+    <ClInclude Include="src\AABBox.hpp" />
   </ItemGroup>
 </Project>

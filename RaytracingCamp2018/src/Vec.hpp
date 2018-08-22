@@ -29,6 +29,8 @@ public:
     bool equals(const Vec &v) const;
     double dot(const Vec &v) const;
     Vec cross(const Vec &v) const;
+    Vec min(const Vec &v) const;
+    Vec max(const Vec &v) const;
     std::string toStr() const;
 };
 

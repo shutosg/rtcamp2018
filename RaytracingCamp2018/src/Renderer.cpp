@@ -114,7 +114,7 @@ void Renderer::startRendering()
             checkProgress(i + 1);
         }
     }
-
+    printf("総レンダリング時間: %s\n", timeFormat(getDiff(startTime, getTime())).c_str());
     printf("保存開始中\n");
 #pragma omp parallel for
     for (auto i = 0; i < size; i++) {
@@ -131,13 +131,11 @@ void Renderer::checkProgress(int sampleNum)
     auto printDiff = getDiff(lastPrintTime, now);
     if (printDiff > PrintInterval) {
         auto prog = getProgress(sampleNum);
-        auto timeDiff = getDiff(startTime, now);
-        int remainingTime = (timeDiff / prog - timeDiff) / 1000;  // 秒
-        printf("%2.2lf%% 完了… 残り予測 %d時間%d分%d秒\n", prog * 100.0, remainingTime / 3600, remainingTime % 3600 / 60, remainingTime % 3600 % 60);
+        printf("%2.2lf%% 完了… 残り予測 %s\n", prog * 100.0, timeFormat(getDiff(startTime, now)).c_str());
         lastPrintTime = now;
     }
     const double SaveIntervalTime = 15000;
-    const int SaveIntervalSampleNum = 5;
+    const int SaveIntervalSampleNum = 10;
     if (getDiff(lastSaveTime, now) > SaveIntervalTime || sampleNum - lastSaveSampleNum >= SaveIntervalSampleNum) {
         auto saveColors = new Spectrum[width * height];
 #pragma omp parallel for
@@ -180,4 +178,13 @@ clk::time_point Renderer::getTime()
 double Renderer::getDiff(clk::time_point start, clk::time_point end)
 {
     return (double)std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+}
+
+std::string Renderer::timeFormat(double millisec)
+{
+    auto sec = (int)millisec / 1000;
+    char buff[30];
+    snprintf(buff, sizeof(buff), "%d時間%d分%d秒", sec / 3600, sec % 3600 / 60, sec % 3600 % 60);
+    std::string buffAsStdStr = buff;
+    return buffAsStdStr;
 }
