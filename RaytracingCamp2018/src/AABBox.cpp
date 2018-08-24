@@ -37,8 +37,8 @@ void AABBox::intersect(const Ray &ray, Intersection &isect)
     if ((txmin > tymax) || (tymin > txmax)) return;
 
     // xy境界面との交点
-    auto tzmin = (minPoint.z - ray.origin.z) * ray.dir.z;
-    auto tzmax = (maxPoint.z - ray.origin.z) * ray.dir.z;
+    auto tzmin = (minPoint.z - ray.origin.z) / ray.dir.z;
+    auto tzmax = (maxPoint.z - ray.origin.z) / ray.dir.z;
     if (tzmin > tzmax) std::swap(tzmin, tzmax);
 
     // 現時点での交点候補を表すt
@@ -53,4 +53,18 @@ void AABBox::intersect(const Ray &ray, Intersection &isect)
     // tmin、tmaxのうち、0より大きく、かつ小さい方がt
     if (tmin < 0) tmin = tmax;
     if (tmin > 0) isect.t = tmin;
+}
+
+Vec AABBox::getCenter()
+{
+    return minPoint.average(maxPoint);
+}
+
+// 表面積の算出
+double AABBox::getSurfaceArea()
+{
+    auto w = maxPoint.x - minPoint.x;
+    auto h = maxPoint.y - minPoint.y;
+    auto d = maxPoint.z - minPoint.z;
+    return 2.0 * (w * h + h * d + w * d);
 }

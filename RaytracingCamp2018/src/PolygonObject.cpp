@@ -41,6 +41,8 @@ PolygonObject::PolygonObject(const ObjLoader &loader, const Vec &pos, const Vec 
         t.v[0] = vertices[t.vIdx[0] - 1];
         t.v[1] = vertices[t.vIdx[1] - 1];
         t.v[2] = vertices[t.vIdx[2] - 1];
+        // 重心
+        t.center = Vec((*t.v[0] + *t.v[1] + *t.v[2]) / 3.0);
         triangles.push_back(t);
     }
 
@@ -81,6 +83,10 @@ void PolygonObject::intersect(const Ray &ray, Intersection &isect)
     // 実際に交差を調べるポリゴンの候補を調べる
     // ルートノードのfindCandidatesを呼べば再帰的に調べてくれる
     auto candidates = nodeList->at(0)->findCandidates(ray);
+    if (candidates.size() != 0) {
+        auto a = 10;
+        candidates = nodeList->at(0)->findCandidates(ray);
+    }
     for (auto t : candidates) {
 #else
     // 総当たりで最も近くで交差した点を求める
@@ -156,7 +162,7 @@ bool PolygonObject::intersectTryangle(const Ray &ray, const Vec &v0, const Vec &
 void PolygonObject::constructBVH()
 {
     nodeList = new vector<Bvh*>();
-    nodeList->push_back(new Bvh(triangles, *nodeList));
+    new Bvh(triangles, *nodeList);
 }
 
 #endif

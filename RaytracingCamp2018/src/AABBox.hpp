@@ -11,5 +11,7 @@ public:
     Vec minPoint;
     Vec maxPoint;
     void intersect(const Ray &ray, Intersection &isect);
+    Vec getCenter();
+    double getSurfaceArea();
 };
 

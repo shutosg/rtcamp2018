@@ -152,6 +152,15 @@ Vec Vec::max(const Vec &v) const
     );
 }
 
+Vec Vec::average(const Vec &v) const
+{
+    return Vec(
+        (x + v.x) / 2.0,
+        (y + v.y) / 2.0,
+        (z + v.z) / 2.0
+    );
+}
+
 std::string Vec::toStr() const
 {
     return "Vec(" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ")";
