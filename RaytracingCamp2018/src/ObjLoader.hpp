@@ -19,7 +19,6 @@ public:
     ObjLoader();
     ObjLoader(const string &fileName);
     ~ObjLoader();
-    void loadObject(const string &fileName);
     vector<Vec*> *vertices;
     vector<int> *faceIndexes;
     vector<int> *verticesIndexes;

@@ -26,8 +26,6 @@ private:
 #ifdef POLYGON_BVH
     vector<Bvh*> *nodeList;
     void constructBVH();
-    void makeLeaf(Bvh *node);
-    void mergeLeaf(Bvh *leaf1, Bvh *leaf2, Bvh *result);
 #endif
 
     void getVertexes(int polyIdx, Vec *&v0, Vec *&v1, Vec *&v2);

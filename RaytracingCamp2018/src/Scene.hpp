@@ -24,7 +24,6 @@ public:
 private:
     std::vector<IIntersectable*> *objs;
     std::vector<Light*> *lights;
-    Vec randomHemisphere() const;
 
     double random() const;
     void findNearestInterSection(const Ray &ray, Intersection &isect);
