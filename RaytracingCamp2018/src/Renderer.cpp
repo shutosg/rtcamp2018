@@ -19,28 +19,50 @@ Renderer::~Renderer()
 void Renderer::initScene()
 {
     // 球の追加
-    scene.addIntersectable(new Sphere(
+    /*scene.addIntersectable(new Sphere(
         1,
         new Vec(0, -2, 0),
-        new Material(new Spectrum(1, 1, 1), 0.2, 0.8, 1.9)
-    ));
-    scene.addIntersectable(new Sphere(
+        new Material(new Spectrum(1, 1, 1), 0.1, 0.9, 1.5)
+    ));*/
+    /*scene.addIntersectable(new Sphere(
         0.8,
         new Vec(-2.0, 0.3, 0),
         new Material(new Spectrum(0.1, 0.5, 1), 0.9)
-    ));
-    scene.addIntersectable(new Sphere(1, new Vec(1.5, -2, -1.0), new Material(new Spectrum(0.1, 0.1, 1))));
-    scene.addIntersectable(new Sphere(1, new Vec(3, 0, 5.0), new Material(new Spectrum(0.1, 1, 0.1))));
-    ObjLoader platonic("resources\\Platonic.obj");
+    ));*/
+    scene.addIntersectable(new Sphere(1, new Vec(1.5, -1, -3.0), new Material(new Spectrum(1, 0.1, 1))));
+    // scene.addIntersectable(new Sphere(1, new Vec(3, 0, 5.0), new Material(new Spectrum(0.1, 1, 0.1))));
+    ObjLoader triangle_01("resources\\Triangle_01_p.obj");
     scene.addIntersectable(
         new PolygonObject(
-            platonic,
-            Vec(2, -1, 0),
-            Vec(1.5),
-            Vec(0, 50, 0),
+            triangle_01,
+            Vec(0, 1, 0),
+            Vec(2.0),
+            Vec(0, 40, 0),
+            new Material(new Spectrum(0.02), 0.8, 0.0, 1.0)
+        ));
+    ObjLoader triangle_02("resources\\Triangle_02.obj");
+    scene.addIntersectable(
+        new PolygonObject(
+            triangle_02,
+            Vec(0, 1, 0),
+            Vec(2.0),
+            Vec(0, 40, 0),
             new Material(new Spectrum(1), 0.1, 0.9, 1.8)
         ));
-
+    ObjLoader triangle_03("resources\\Triangle_03.obj");
+    scene.addIntersectable(
+        new PolygonObject(
+            triangle_03,
+            Vec(0, 1, 0),
+            Vec(2.0),
+            Vec(0, 40, 0),
+            new Material(new Spectrum(1), new Spectrum(10))
+        ));
+    scene.addIntersectable(new Sphere(
+        0.25,
+        new Vec(0, 1, 0),
+        new Material(new Spectrum(1), new Spectrum(10))
+    ));
     // コーネルボックス
     // createCornellBox(6, 6, 8);
 
@@ -64,7 +86,9 @@ void Renderer::initScene()
     ));
 #endif
     // 無限平面
-    scene.addIntersectable(new Plane(new Vec(0, 1, 0), 3, new Material()));
+    scene.addIntersectable(new Plane(new Vec(0, 1, 0), 0,
+        new Material(new Spectrum(1), 0.5)
+    ));
 }
 
 void Renderer::createCornellBox(double w, double h, double d)
@@ -99,12 +123,12 @@ void Renderer::startRendering()
     // カメラ作成
     auto aspect = (double)width / height;
     auto cam = Camera(
-        Vec(0, 0, 10),
-        Vec(0, 0, -1),
+        Vec(0, 5, 9),
+        Vec(0, -0.275, -0.5),
         Vec(0, 1, 0),
         1.5,
         9.5,
-        0.025,
+        0.05,
         aspect
     );
 
