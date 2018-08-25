@@ -168,11 +168,13 @@ void Renderer::checkProgress(int sampleNum)
     auto printDiff = getDiff(lastPrintTime, now);
     if (printDiff > PrintInterval) {
         auto prog = getProgress(sampleNum);
-        printf("%2.2lf%% 完了… 残り予測 %s\n", prog * 100.0, timeFormat(getDiff(startTime, now)).c_str());
+        auto timeDiff = getDiff(startTime, now);
+        int remainingTime = (timeDiff / prog - timeDiff);
+        printf("%2.2lf%% 完了… 残り予測 %s\n", prog * 100.0, timeFormat(remainingTime).c_str());
         lastPrintTime = now;
     }
-    const double SaveIntervalTime = 15000;
-    const int SaveIntervalSampleNum = 10;
+    const double SaveIntervalTime = 1500;
+    const int SaveIntervalSampleNum = 9999999999;
     if (getDiff(lastSaveTime, now) > SaveIntervalTime || sampleNum - lastSaveSampleNum >= SaveIntervalSampleNum) {
         auto saveColors = new Spectrum[width * height];
 #pragma omp parallel for
