@@ -18,7 +18,7 @@ AABBox::AABBox(Vec minPoint, Vec maxPoint)
 {
 }
 
-void AABBox::intersect(const Ray &ray, Intersection &isect)
+void AABBox::intersect(const Ray &ray, int depth, Intersection &isect)
 {
     // 参考: https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-box-intersection
 

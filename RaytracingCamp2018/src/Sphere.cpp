@@ -1,34 +1,34 @@
 ﻿#include "Sphere.hpp"
 
 Sphere::Sphere()
-    : radius(1)
+    : IIntersectable()
+    , radius(1)
     , pos(new Vec())
-    , mat(new Material())
 {
 }
 
 Sphere::Sphere(const Sphere &sphere)
-    : radius(sphere.radius)
+    : IIntersectable(sphere.mat, sphere.bVisibleFromCamera)
+    , radius(sphere.radius)
     , pos(sphere.pos)
-    , mat(sphere.mat)
 {
 }
 
-Sphere::Sphere(double radius, Vec *pos, Material *mat)
-    : radius(radius)
-    , mat(mat)
+Sphere::Sphere(double radius, Vec *pos, Material *mat, bool visibleFromCamera)
+    : IIntersectable(mat, visibleFromCamera)
+    , radius(radius)
     , pos(pos)
 {
 }
 
 Sphere::~Sphere()
 {
-    delete mat;
     delete pos;
 }
 
-void Sphere::intersect(const Ray &ray, Intersection &isect)
+void Sphere::intersect(const Ray &ray, int depth, Intersection &isect)
 {
+    if (!visibleFromCamera(depth)) return;
     auto p = ray.origin - *pos;
     auto b = ray.dir.dot(p);
     auto c = p.dot(p) - radius * radius;

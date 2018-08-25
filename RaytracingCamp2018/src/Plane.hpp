@@ -9,11 +9,10 @@ public:
     Plane(const Plane &p);
     Plane(Vec *normal, double d, Material *mat);
     ~Plane();
-    void intersect(const Ray &ray, Intersection &isect);
+    void intersect(const Ray &ray, int depth, Intersection &isect);
 
 private:
     Vec *normal;
     double d;
-    Material *mat;
 };
 

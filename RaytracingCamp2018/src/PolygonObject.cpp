@@ -5,6 +5,7 @@
 #include <vector>
 
 PolygonObject::PolygonObject()
+    : IIntersectable()
 {
     vertNum = 3;
     vertices = new Vec*[vertNum];
@@ -15,11 +16,11 @@ PolygonObject::PolygonObject()
     verticesIndexes[0] = 0;
     verticesIndexes[1] = 1;
     verticesIndexes[2] = 2;
-    mat = new Material(new Spectrum(1, 0 ,0));
     isSingleSide = true;
 }
 
 PolygonObject::PolygonObject(const ObjLoader &loader, const Vec &pos, const Vec &scale, const Vec &rot, Material *mat)
+    : IIntersectable(mat)
 {
     // objloaderからデータをコピー
     // 頂点情報
@@ -47,7 +48,6 @@ PolygonObject::PolygonObject(const ObjLoader &loader, const Vec &pos, const Vec 
     }
 
     // その他
-    this->mat = mat;
     isSingleSide = mat->refractive == 0;
 
     // トランスフォーム
@@ -68,7 +68,6 @@ PolygonObject::~PolygonObject()
     }
     delete vertices;
     delete verticesIndexes;
-    delete mat;
     triangles.clear();
 #ifdef POLYGON_BVH
     // BVH全ノードに対して責任を負う
@@ -76,17 +75,13 @@ PolygonObject::~PolygonObject()
 #endif
 }
 
-void PolygonObject::intersect(const Ray &ray, Intersection &isect)
+void PolygonObject::intersect(const Ray &ray, int depth, Intersection &isect)
 {
     Intersection nearest;
 #ifdef POLYGON_BVH
     // 実際に交差を調べるポリゴンの候補を調べる
     // ルートノードのfindCandidatesを呼べば再帰的に調べてくれる
     auto candidates = nodeList->at(0)->findCandidates(ray);
-    if (candidates.size() != 0) {
-        auto a = 10;
-        candidates = nodeList->at(0)->findCandidates(ray);
-    }
     for (auto t : candidates) {
 #else
     // 総当たりで最も近くで交差した点を求める

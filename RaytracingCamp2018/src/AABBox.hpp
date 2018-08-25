@@ -10,7 +10,7 @@ public:
     AABBox(Vec minPoint, Vec maxPoint);
     Vec minPoint;
     Vec maxPoint;
-    void intersect(const Ray &ray, Intersection &isect);
+    void intersect(const Ray &ray, int depth, Intersection &isect);
     Vec getCenter();
     double getSurfaceArea();
 };

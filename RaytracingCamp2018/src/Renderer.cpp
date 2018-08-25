@@ -53,8 +53,14 @@ void Renderer::initScene()
 #else
     scene.addIntersectable(new Sphere(
         1,
-        new Vec(0, 3.5, 0),
-        new Material(new Spectrum(1, 1, 1), new Spectrum(25))
+        new Vec(0, 6, 0),
+        new Material(new Spectrum(1, 1, 1), new Spectrum(50))
+    ));
+    scene.addIntersectable(new Sphere(
+        1,
+        new Vec(3, 1, 3),
+        new Material(new Spectrum(1, 1, 1), new Spectrum(5)),
+        false
     ));
 #endif
     // 無限平面

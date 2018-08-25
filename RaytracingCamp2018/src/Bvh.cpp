@@ -111,7 +111,7 @@ std::vector<Triangle> Bvh::findCandidates(const Ray &ray) const
 {
     std::vector<Triangle> candidates;
     Intersection isect;
-    aabbox->intersect(ray, isect);
+    aabbox->intersect(ray, 0, isect);
     // 自身のAABBにヒットしなければ空で返す
     if (!isect.isHit()) {
         return candidates;

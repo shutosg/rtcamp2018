@@ -26,7 +26,7 @@ private:
     std::vector<Light*> *lights;
 
     double random() const;
-    void findNearestInterSection(const Ray &ray, Intersection &isect);
+    void findNearestInterSection(const Ray &ray, int depth, Intersection &isect);
     void diffuseLighting(const Vec &p, const Vec &n, const Light &light, const Spectrum &matDiffuse, Spectrum &spectrum);
     bool visible(const Vec &from, const Vec &to);
 };

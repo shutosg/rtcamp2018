@@ -37,7 +37,7 @@ void Scene::trace(const Ray &ray, Spectrum &spectrum, int depth)
     if (depth >= constants::kMAX_TRACE_DEPTH) return;
 
     auto nearest = Intersection();
-    findNearestInterSection(ray, nearest);
+    findNearestInterSection(ray, depth, nearest);
     // ヒットしなかったので空の色
     if (!nearest.isHit()) {
         spectrum += Spectrum::Sky;
@@ -95,11 +95,11 @@ void Scene::intersectSurface(const Vec &dir, const Intersection &isect, Spectrum
     }
 }
 
-void Scene::findNearestInterSection(const Ray &ray, Intersection &nearest)
+void Scene::findNearestInterSection(const Ray &ray, int depth, Intersection &nearest)
 {
     for (auto i = 0; i < objs->size(); i++) {
         auto result = Intersection();
-        objs->at(i)->intersect(ray, result);
+        objs->at(i)->intersect(ray, depth, result);
         if (result.t < nearest.t) {
             nearest = result;
         }
@@ -129,7 +129,7 @@ bool Scene::visible(const Vec &from, const Vec &to)
     for (auto i = 0; i < objs->size(); i++) {
         auto obj = objs->at(i);
         auto isect = Intersection();
-        obj->intersect(ray, isect);
+        obj->intersect(ray, 0, isect);
         // posから光源までの間に遮蔽物がある
         if (isect.t < v.len()) return false;
     }

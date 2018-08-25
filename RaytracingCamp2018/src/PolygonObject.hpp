@@ -14,7 +14,7 @@ public:
     PolygonObject();
     PolygonObject(const ObjLoader &loader, const Vec &pos = Vec(0), const Vec &scale = Vec(1), const Vec &rot = Vec(0), Material *mat = new Material());
     ~PolygonObject();
-    void intersect(const Ray &ray, Intersection &isect);
+    void intersect(const Ray &ray, int depth, Intersection &isect);
 
 private:
     Vec **vertices;
@@ -22,7 +22,6 @@ private:
     int *verticesIndexes;
     vector<Triangle> triangles;
     bool isSingleSide;
-    Material *mat;
 #ifdef POLYGON_BVH
     vector<Bvh*> *nodeList;
     void constructBVH();
