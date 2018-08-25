@@ -8,7 +8,6 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Material.cpp" />
     <ClCompile Include="src\ObjLoader.cpp" />
-    <ClCompile Include="src\Plane.cpp" />
     <ClCompile Include="src\PolygonObject.cpp" />
     <ClCompile Include="src\Random.cpp" />
     <ClCompile Include="src\Ray.cpp" />
@@ -20,6 +19,7 @@
     <ClCompile Include="src\utils.cpp" />
     <ClCompile Include="src\Bvh.cpp" />
     <ClCompile Include="src\AABBox.cpp" />
+    <ClCompile Include="src\InifinitePlane.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Camera.hpp" />
@@ -30,7 +30,6 @@
     <ClInclude Include="src\Light.hpp" />
     <ClInclude Include="src\Material.hpp" />
     <ClInclude Include="src\ObjLoader.hpp" />
-    <ClInclude Include="src\Plane.hpp" />
     <ClInclude Include="src\PolygonObject.hpp" />
     <ClInclude Include="src\Random.hpp" />
     <ClInclude Include="src\Ray.hpp" />
@@ -43,5 +42,6 @@
     <ClInclude Include="src\Bvh.hpp" />
     <ClInclude Include="src\Triangle.hpp" />
     <ClInclude Include="src\AABBox.hpp" />
+    <ClInclude Include="src\InifinitePlane.hpp" />
   </ItemGroup>
 </Project>

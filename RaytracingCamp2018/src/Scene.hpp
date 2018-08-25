@@ -8,7 +8,7 @@
 #include "Sphere.hpp"
 #include "ObjLoader.hpp"
 #include "PolygonObject.hpp"
-#include "Plane.hpp"
+#include "InifinitePlane.hpp"
 #include "Light.hpp"
 #include "constant.h"
 

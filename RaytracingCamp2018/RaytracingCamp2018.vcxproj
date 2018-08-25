@@ -28,7 +28,6 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Material.cpp" />
     <ClCompile Include="src\ObjLoader.cpp" />
-    <ClCompile Include="src\Plane.cpp" />
     <ClCompile Include="src\PolygonObject.cpp" />
     <ClCompile Include="src\Random.cpp" />
     <ClCompile Include="src\Ray.cpp" />
@@ -50,7 +49,6 @@
     <ClInclude Include="src\Light.hpp" />
     <ClInclude Include="src\Material.hpp" />
     <ClInclude Include="src\ObjLoader.hpp" />
-    <ClInclude Include="src\Plane.hpp" />
     <ClInclude Include="src\PolygonObject.hpp" />
     <ClInclude Include="src\Random.hpp" />
     <ClInclude Include="src\Ray.hpp" />

@@ -81,7 +81,7 @@ void Renderer::initScene()
     ));
 #endif
     // 無限平面
-    scene.addIntersectable(new Plane(new Vec(0, 1, 0), 0,
+    scene.addIntersectable(new InfinitePlane(new Vec(0, 1, 0), 0,
         new Material(new Spectrum(1), 0.5)
     ));
 }
