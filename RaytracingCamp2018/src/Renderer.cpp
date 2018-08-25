@@ -110,7 +110,7 @@ void Renderer::initTimer()
 void Renderer::startRendering()
 {
     // シーン準備
-    printf("シーン準備\n");
+    printf("Initializing scene...\n");
     scene = Scene();
     initScene();
     initTimer();
@@ -132,7 +132,9 @@ void Renderer::startRendering()
     printf("tracing...\n");
     Random& rnd = Random::get_instance();
 
-    for (auto i = 0; i < constants::kMAX_SAMPLING_NUM; i++) {
+    auto sampleIdx = 0;
+
+    for (; sampleIdx < constants::kMAX_SAMPLING_NUM && getDiff(startTime, getTime()) < 120000; sampleIdx++) {
 #pragma omp parallel for schedule(dynamic)
         for (auto y = 0; y < height; y++) {
             for (auto x = 0; x < width; x++) {
@@ -143,32 +145,32 @@ void Renderer::startRendering()
         }
 #pragma omp critical
         {
-            checkProgress(i + 1);
+            checkProgress(sampleIdx + 1);
         }
     }
-    printf("総レンダリング時間: %s\n", timeFormat(getDiff(startTime, getTime())).c_str());
-    printf("保存開始中\n");
+    printf("Rendering Time: %s\n", timeFormat(getDiff(startTime, getTime())).c_str());
+    printf("Start Saving Final Result\n");
 #pragma omp parallel for
     for (auto i = 0; i < size; i++) {
-        colors[i] = colors[i].scale(1.0 / constants::kMAX_SAMPLING_NUM);
+        colors[i] = colors[i].scale(1.0 / (sampleIdx + 1));
     }       
-    saveImage("output", colors);
-    printf("終了\n");
+    saveImage("output_final_result", colors);
+    printf("Finalizing...\n");
 }
 
 void Renderer::checkProgress(int sampleNum)
 {
-    const double PrintInterval = 3000;
+    const double PrintInterval = 10000;
     auto now = getTime();
     auto printDiff = getDiff(lastPrintTime, now);
     if (printDiff > PrintInterval) {
         auto prog = getProgress(sampleNum);
         auto timeDiff = getDiff(startTime, now);
         int remainingTime = (timeDiff / prog - timeDiff);
-        printf("%2.2lf%% 完了… 残り予測 %s\n", prog * 100.0, timeFormat(remainingTime).c_str());
+        printf("%2.2lf%% Completed... Remaining %s\n", prog * 100.0, timeFormat(remainingTime).c_str());
         lastPrintTime = now;
     }
-    const double SaveIntervalTime = 1500;
+    const double SaveIntervalTime = 15000;
     const int SaveIntervalSampleNum = 9999999999;
     if (getDiff(lastSaveTime, now) > SaveIntervalTime || sampleNum - lastSaveSampleNum >= SaveIntervalSampleNum) {
         auto saveColors = new Spectrum[width * height];
@@ -178,8 +180,8 @@ void Renderer::checkProgress(int sampleNum)
         }
 #pragma omp critical
         {
-            // saveImage("output", saveColors, false, sampleNum - 1);
-            saveImage("output", saveColors);
+            saveImage("output", saveColors, false, sampleNum - 1);
+            // saveImage("output", saveColors);
             delete[] saveColors;
             lastSaveTime = now;
             lastSaveSampleNum = sampleNum;
@@ -194,9 +196,9 @@ void Renderer::saveImage(std::string fileName, Spectrum *colors, bool overWritte
     fileName += overWritten ? "" : ("_" + ss.str());
     // ファイル用意
     Image image = Image();
-    printf("保存\n");
     // 保存
     image.savePng(fileName, colors, width, height);
+    printf("Saved.\n");
 }
 
 double Renderer::getProgress(int sampleNum)
@@ -218,7 +220,7 @@ std::string Renderer::timeFormat(double millisec)
 {
     auto sec = (int)millisec / 1000;
     char buff[30];
-    snprintf(buff, sizeof(buff), "%d時間%d分%d秒", sec / 3600, sec % 3600 / 60, sec % 3600 % 60);
+    snprintf(buff, sizeof(buff), "%d Hour %d Min. %d Sec.", sec / 3600, sec % 3600 / 60, sec % 3600 % 60);
     std::string buffAsStdStr = buff;
     return buffAsStdStr;
 }

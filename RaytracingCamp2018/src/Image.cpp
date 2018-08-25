@@ -46,9 +46,9 @@ void Image::checkDirectory()
         // ディレクトリ作成
         int result = _mkdir(dir);
         if (result != 0) {
-            printf("ディレクトリの作成に失敗しました\n");
+            printf("Failed to make directory.\n");
             return;
         }
-        printf("ディレクトリを作成しました\n");
+        printf("Successfully created save directory.\n");
     }
 }
