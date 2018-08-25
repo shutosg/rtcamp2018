@@ -32,6 +32,7 @@ public:
     Vec min(const Vec &v) const;
     Vec max(const Vec &v) const;
     Vec average(const Vec &v) const;
+    Vec flag() const;
     std::string toStr() const;
 };
 

@@ -161,6 +161,15 @@ Vec Vec::average(const Vec &v) const
     );
 }
 
+Vec Vec::flag() const
+{
+    return Vec(
+        x == 0 ? 0 : 1,
+        y == 0 ? 0 : 1,
+        z == 0 ? 0 : 1
+    );
+}
+
 std::string Vec::toStr() const
 {
     return "Vec(" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ")";

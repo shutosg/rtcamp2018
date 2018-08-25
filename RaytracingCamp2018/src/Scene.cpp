@@ -26,6 +26,30 @@ void Scene::addIntersectable(IIntersectable *obj)
     objs->push_back(obj);
 }
 
+// Objを読み込んでシーンに追加（クローンのオプション指定可能）
+// scaleReflect: クローンのインデックスが負の場合、スケールを-1に反転させるかどうかのオプション
+void Scene::addObj(
+    const std::string fileName,
+    const Vec &pos,
+    const Vec &scale,
+    const Vec &rot,
+    const Material &mat,
+    const int cloneNum, const Vec posOffset, const Vec scaleOffset, const Vec rotOffset, bool scaleReflect)
+{
+    ObjLoader obj(fileName);
+    for (auto i = -cloneNum / 2; i <= cloneNum / 2; i++) {
+        // クローン数が偶数なら0はスキップ
+        if (i == 0 && cloneNum % 2 == 0) continue;
+        addIntersectable(new PolygonObject(
+            obj,
+            pos + posOffset.scale(i),
+            scale * (Vec(1) + (scaleReflect && i < 0 ? posOffset.flag().scale(-2) : Vec(0))) + scaleOffset.scale(i),
+            rot + rotOffset.scale(i),
+            new Material(mat)
+        ));
+    }
+}
+
 void Scene::addLight(Light *light)
 {
     lights->push_back(light);

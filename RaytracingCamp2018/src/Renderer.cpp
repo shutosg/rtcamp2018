@@ -31,33 +31,28 @@ void Renderer::initScene()
     ));*/
     scene.addIntersectable(new Sphere(1, new Vec(1.5, -1, -3.0), new Material(new Spectrum(1, 0.1, 1))));
     // scene.addIntersectable(new Sphere(1, new Vec(3, 0, 5.0), new Material(new Spectrum(0.1, 1, 0.1))));
-    ObjLoader triangle_01("resources\\Triangle_01_p.obj");
-    scene.addIntersectable(
-        new PolygonObject(
-            triangle_01,
-            Vec(0, 1, 0),
-            Vec(2.0),
-            Vec(0, 40, 0),
-            new Material(new Spectrum(0.02), 0.8, 0.0, 1.0)
-        ));
-    ObjLoader triangle_02("resources\\Triangle_02.obj");
-    scene.addIntersectable(
-        new PolygonObject(
-            triangle_02,
-            Vec(0, 1, 0),
-            Vec(2.0),
-            Vec(0, 40, 0),
-            new Material(new Spectrum(1), 0.1, 0.9, 1.8)
-        ));
-    ObjLoader triangle_03("resources\\Triangle_03.obj");
-    scene.addIntersectable(
-        new PolygonObject(
-            triangle_03,
-            Vec(0, 1, 0),
-            Vec(2.0),
-            Vec(0, 40, 0),
-            new Material(new Spectrum(1), new Spectrum(10))
-        ));
+    scene.addObj(
+        "resources\\Triangle_01_a.obj",
+        Vec(0, 1, 0),
+        Vec(2.0),
+        Vec(0, 40, 0),
+        Material(new Spectrum(0.02), 0.8, 0.0, 1.0),
+        4, Vec(0, 0.2, 0), Vec(), Vec(), true
+    );
+    scene.addObj(
+        "resources\\Triangle_02.obj",
+        Vec(0, 1, 0),
+        Vec(2.0),
+        Vec(0, 40, 0),
+        Material(new Spectrum(1), 0.1, 0.9, 1.8)
+    );
+    scene.addObj(
+        "resources\\Triangle_03.obj",
+        Vec(0, 1, 0),
+        Vec(2.0),
+        Vec(0, 40, 0),
+        Material(new Spectrum(1), new Spectrum(10))
+    );
     scene.addIntersectable(new Sphere(
         0.25,
         new Vec(0, 1, 0),
