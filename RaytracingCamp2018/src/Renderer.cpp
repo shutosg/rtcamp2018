@@ -110,10 +110,10 @@ void Renderer::initTimer()
 void Renderer::startRendering()
 {
     // シーン準備
+    initTimer();
     printf("Initializing scene...\n");
     scene = Scene();
     initScene();
-    initTimer();
 
     // カメラ作成
     auto aspect = (double)width / height;
@@ -134,19 +134,17 @@ void Renderer::startRendering()
 
     auto sampleIdx = 0;
 
-    for (; sampleIdx < constants::kMAX_SAMPLING_NUM && getDiff(startTime, getTime()) < 120000; sampleIdx++) {
-#pragma omp parallel for schedule(dynamic)
+    for (; getDiff(startTime, getTime()) < constants::kTIME_LIMIT; sampleIdx++) {
+#pragma omp parallel for schedule(dynamic) num_threads(72)  // 競技用環境に合わせて論理コア数を直接指定
         for (auto y = 0; y < height; y++) {
+            bindThread();  // 論理コアが64以上マシンでもCPUグループを跨いでスレッドを実行できるようにする
             for (auto x = 0; x < width; x++) {
                 auto idx = y * width + x;
                 auto ray = cam.getPrimaryRay((x + rnd.random(-0.5, 0.5)) / width - 0.5, -(y + rnd.random(-0.5, 0.5)) / height + 0.5);
                 scene.trace(ray, colors[idx]);
             }
         }
-#pragma omp critical
-        {
-            checkProgress(sampleIdx + 1);
-        }
+        checkProgress(sampleIdx + 1);
     }
     printf("Rendering Time: %s\n", timeFormat(getDiff(startTime, getTime())).c_str());
     printf("Start Saving Final Result\n");
@@ -199,6 +197,16 @@ void Renderer::saveImage(std::string fileName, Spectrum *colors, bool overWritte
     // 保存
     image.savePng(fileName, colors, width, height);
     printf("Saved.\n");
+}
+
+void Renderer::bindThread()
+{
+    auto thread_id = omp_get_thread_num();
+    auto group = thread_id % 2; // 0, 1でプロセッサグループを指定
+    GROUP_AFFINITY mask;
+    if (GetNumaNodeProcessorMaskEx(group, &mask)) {
+        SetThreadGroupAffinity(GetCurrentThread(), &mask, nullptr);
+    }
 }
 
 double Renderer::getProgress(int sampleNum)

@@ -7,4 +7,5 @@ namespace constants {
     const double kVACUUM_REFRACTIVE_INDEX = 1.0;
     const int kMAX_TRACE_DEPTH = 8;
     const int kMAX_SAMPLING_NUM = 10;
+    const int kTIME_LIMIT = 120000;
 };

@@ -5,12 +5,16 @@
 #include <sstream>
 #include <iomanip>
 #include <chrono>
+#include <omp.h>
 
 #include "Image.hpp"
 #include "Camera.hpp"
 #include "Scene.hpp"
 #include "constant.h"
 #include "ObjLoader.hpp"
+
+#include <windows.h>
+#include <process.h>
 
 using clk = std::chrono::system_clock;
 
@@ -35,6 +39,7 @@ private:
     void initTimer();
     void saveImage(std::string fileName, Spectrum * colors, bool overWritten = true, int index = -1);
     void createCornellBox(double w, double h, double d);
+    void bindThread();
     double getProgress(int sampleIdx);
     void checkProgress(int sampleIdx);
     clk::time_point getTime();
