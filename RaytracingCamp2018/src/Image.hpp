@@ -11,8 +11,9 @@ class Image
 {
 public:
     Image();
-    void savePpm(std::string &fileName, Spectrum *colors, int width, int height);
-    void savePng(std::string &fileName, Spectrum *colors, int width, int height);
+    void savePpm(const std::string &fileName, Spectrum *colors, int width, int height);
+    void savePng(const std::string &fileName, Spectrum *colors, int width, int height);
+    void loadPng(const std::string &fileName, Spectrum **&colors, int &width, int &height);
 
 private:
     const std::string saveFolder = std::string("render\\");

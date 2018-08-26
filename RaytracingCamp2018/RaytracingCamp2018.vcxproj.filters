@@ -43,5 +43,6 @@
     <ClInclude Include="src\Triangle.hpp" />
     <ClInclude Include="src\AABBox.hpp" />
     <ClInclude Include="src\InifinitePlane.hpp" />
+    <ClInclude Include="src\CubeMapImage.hpp" />
   </ItemGroup>
 </Project>

@@ -32,7 +32,10 @@ public:
     Vec min(const Vec &v) const;
     Vec max(const Vec &v) const;
     Vec average(const Vec &v) const;
+    Vec abs() const;
     Vec flag() const;
+    int maxAxis() const;
+    int minAxis() const;
     std::string toStr() const;
 };
 

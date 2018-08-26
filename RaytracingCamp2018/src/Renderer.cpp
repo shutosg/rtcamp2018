@@ -18,72 +18,76 @@ Renderer::~Renderer()
 
 void Renderer::initScene()
 {
-    // 球の追加
-    /*scene.addIntersectable(new Sphere(
-        1,
-        new Vec(0, -2, 0),
-        new Material(new Spectrum(1, 1, 1), 0.1, 0.9, 1.5)
-    ));*/
-    /*scene.addIntersectable(new Sphere(
-        0.8,
-        new Vec(-2.0, 0.3, 0),
-        new Material(new Spectrum(0.1, 0.5, 1), 0.9)
-    ));*/
-    scene.addIntersectable(new Sphere(1, new Vec(1.5, -1, -3.0), new Material(new Spectrum(1, 0.1, 1))));
-    // scene.addIntersectable(new Sphere(1, new Vec(3, 0, 5.0), new Material(new Spectrum(0.1, 1, 0.1))));
+    // ドラゴン
     scene.addObj(
-        "resources\\Triangle_01_a.obj",
-        Vec(0, 1, 0),
-        Vec(2.0),
-        Vec(0, 40, 0),
-        Material(new Spectrum(0.02), 0.8, 0.0, 1.0),
-        4, Vec(0, 0.2, 0), Vec(), Vec(), true
+        "resources\\Dragon.obj",
+        Vec(),
+        Vec(2.5),
+        Vec(),
+        Material(new Spectrum(1))
     );
-    scene.addObj(
-        "resources\\Triangle_02.obj",
-        Vec(0, 1, 0),
-        Vec(2.0),
-        Vec(0, 40, 0),
-        Material(new Spectrum(1), 0.1, 0.9, 1.8)
-    );
-    scene.addObj(
-        "resources\\Triangle_03.obj",
-        Vec(0, 1, 0),
-        Vec(2.0),
-        Vec(0, 40, 0),
-        Material(new Spectrum(1), new Spectrum(10))
-    );
+    // 鏡
     scene.addIntersectable(new Sphere(
-        0.25,
-        new Vec(0, 1, 0),
-        new Material(new Spectrum(1), new Spectrum(10))
+        0.5,
+        new Vec(-4.5, 0.5, 2),
+        new Material(new Spectrum(0.95, 0.6, 0.05), 1.0)
+    ));
+    // 赤
+    scene.addIntersectable(new Sphere(
+        0.5,
+        new Vec(0.0, 0.5, 3.5),
+        new Material(new Spectrum(1, 0.0, 0), 0.9)
+    ));
+    // クリスタル
+    scene.addIntersectable(new Sphere(
+        1.0,
+        new Vec(-2.0, 1.0, -1.0),
+        new Material(new Spectrum(1), 0.05, 0.9, 2.8)
+    ));
+    // 緑
+    scene.addIntersectable(new Sphere(
+        0.5,
+        new Vec(-4, 0.5, -4),
+        new Material(new Spectrum(0, 1, 0), 0.9)
+    ));
+    // 青
+    scene.addIntersectable(new Sphere(
+        1.0,
+        new Vec(-1, 1.0, -7),
+        new Material(new Spectrum(0, 0, 1), 0.9)
     ));
     // コーネルボックス
     // createCornellBox(6, 6, 8);
 
     // ライトの追加
 #ifndef USE_PATH_TRACING
-    scene.addLight(new Light(new Vec(2.5), new Spectrum(100, 80, 80)));
-    scene.addLight(new Light(new Vec(-1.0, -2.0, 2.5), new Spectrum(80, 80, 100)));
+    scene.addLight(new Light(new Vec(2.5), new Spectrum(100)));
+    scene.addLight(new Light(new Vec(-5.0, 2.0, -1), new Spectrum(80)));
     scene.addLight(new Light(new Vec(0.0, 2.5, 0.0), new Spectrum(250)));
     scene.addLight(new Light(new Vec(0.0, -2.5, 0.0), new Spectrum(30)));
 #else
     scene.addIntersectable(new Sphere(
         1,
-        new Vec(0, 6, 0),
-        new Material(new Spectrum(1, 1, 1), new Spectrum(50))
-    ));
-    scene.addIntersectable(new Sphere(
-        1,
-        new Vec(3, 1, 3),
-        new Material(new Spectrum(1, 1, 1), new Spectrum(5)),
+        new Vec(-8, 6, 3),
+        new Material(new Spectrum(1, 1, 1), new Spectrum(30)),
         false
     ));
 #endif
     // 無限平面
     scene.addIntersectable(new InfinitePlane(new Vec(0, 1, 0), 0,
-        new Material(new Spectrum(1), 0.5)
+        new Material(new Spectrum(0.99), 0.9)
     ));
+}
+
+void Renderer::initCubeMap()
+{
+    auto image = Image();
+    int w, h;
+    Spectrum **colors;
+    for (auto i = 0; i < 6; i++) {
+        image.loadPng("resources\\studio022_" + std::to_string(i) + ".png", colors, w, h);
+        scene.addCubeMapImage(new CubeMapImage(colors, w, h), i);
+    }
 }
 
 void Renderer::createCornellBox(double w, double h, double d)
@@ -112,18 +116,19 @@ void Renderer::startRendering()
     // シーン準備
     initTimer();
     printf("Initializing scene...\n");
-    scene = Scene();
     initScene();
+    initCubeMap();
 
     // カメラ作成
     auto aspect = (double)width / height;
+    auto camPos = Vec(-7.5, 4, 7.25);
     auto cam = Camera(
-        Vec(0, 5, 9),
-        Vec(0, -0.275, -0.5),
+        camPos,
+        Vec(0.85, -0.5, -1),
         Vec(0, 1, 0),
-        1.5,
-        9.5,
-        0.05,
+        3.0,
+        (camPos - Vec(0, 1, 1)).len(),
+        0.4,
         aspect
     );
 

@@ -161,6 +161,15 @@ Vec Vec::average(const Vec &v) const
     );
 }
 
+Vec Vec::abs() const
+{
+    return Vec(
+        std::abs(x),
+        std::abs(y),
+        std::abs(z)
+    );
+}
+
 Vec Vec::flag() const
 {
     return Vec(
@@ -168,6 +177,22 @@ Vec Vec::flag() const
         y == 0 ? 0 : 1,
         z == 0 ? 0 : 1
     );
+}
+
+int Vec::maxAxis() const
+{
+    auto max = std::max(std::max(x, y), z);
+    if (max == x) return 0;
+    if (max == y) return 1;
+    return 2;
+}
+
+int Vec::minAxis() const
+{
+    auto min = std::min(std::min(x, y), z);
+    if (min == x) return 0;
+    if (min == y) return 1;
+    return 2;
 }
 
 std::string Vec::toStr() const

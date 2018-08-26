@@ -36,6 +36,7 @@ private:
     int lastSaveSampleNum;
 
     void initScene();
+    void initCubeMap();
     void initTimer();
     void saveImage(std::string fileName, Spectrum * colors, bool overWritten = true, int index = -1);
     void createCornellBox(double w, double h, double d);

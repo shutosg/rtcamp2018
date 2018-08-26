@@ -85,4 +85,4 @@ std::string Spectrum::toStr()
 }
 
 const Spectrum Spectrum::Black = Spectrum(0);
-const Spectrum Spectrum::Sky = Spectrum(0.01, 0.01, 0.01);
+const Spectrum Spectrum::Sky = Spectrum(0.8, 0.8, 0.8);

@@ -18,6 +18,9 @@ Scene::~Scene()
         delete element;
     }
     lights->clear();
+    for (auto i : cubeMapImages) {
+        if (i) delete i;
+    }
 }
 
 
@@ -27,7 +30,6 @@ void Scene::addIntersectable(IIntersectable *obj)
 }
 
 // Objを読み込んでシーンに追加（クローンのオプション指定可能）
-// scaleReflect: クローンのインデックスが負の場合、スケールを-1に反転させるかどうかのオプション
 void Scene::addObj(
     const std::string fileName,
     const Vec &pos,
@@ -37,9 +39,7 @@ void Scene::addObj(
     const int cloneNum, const Vec posOffset, const Vec scaleOffset, const Vec rotOffset, bool scaleReflect)
 {
     ObjLoader obj(fileName);
-    for (auto i = -cloneNum / 2; i <= cloneNum / 2; i++) {
-        // クローン数が偶数なら0はスキップ
-        if (i == 0 && cloneNum % 2 == 0) continue;
+    for (auto i = 0; i < cloneNum; i++) {
         addIntersectable(new PolygonObject(
             obj,
             pos + posOffset.scale(i),
@@ -55,6 +55,11 @@ void Scene::addLight(Light *light)
     lights->push_back(light);
 }
 
+void Scene::addCubeMapImage(CubeMapImage *image, int dir)
+{
+    cubeMapImages[dir] = image;
+}
+
 void Scene::trace(const Ray &ray, Spectrum &spectrum, int depth)
 {
     // 反射制限数チェック
@@ -64,7 +69,7 @@ void Scene::trace(const Ray &ray, Spectrum &spectrum, int depth)
     findNearestInterSection(ray, depth, nearest);
     // ヒットしなかったので空の色
     if (!nearest.isHit()) {
-        spectrum += Spectrum::Sky;
+        addSkyColor(ray, spectrum);
         return;
     }
 
@@ -158,4 +163,50 @@ bool Scene::visible(const Vec &from, const Vec &to)
         if (isect.t < v.len()) return false;
     }
     return true;
+}
+
+void Scene::addSkyColor(const Ray &ray, Spectrum &spectrum)
+{
+    if (cubeMapImages[0] && cubeMapImages[0]->width != 0) {
+        // キューブマップが有効なので環境色を算出
+
+        // x,y,zのどの方向を見ているか
+        auto lookDirAxis = ray.dir.abs().maxAxis();
+        double dir[] = {ray.dir.x, ray.dir.y, ray.dir.z};
+        // 最大の要素が1のdir
+        auto tmp = ray.dir.scale(1.0 / std::abs(dir[lookDirAxis]));
+        Vec uv;
+        // uv座標[-1, 1]を算出
+        switch (lookDirAxis)
+        {
+        case 0:
+            uv.x = tmp.z;
+            uv.y = tmp.y;
+            if (ray.dir.x < 0)
+                uv.x *= -1;
+            break;
+        case 1:
+            uv.x = tmp.x;
+            uv.y = tmp.z;
+            if (ray.dir.y < 0)
+                uv.x *= -1;
+            break;
+        case 2:
+            uv.x = tmp.x;
+            uv.y = tmp.y;
+            if (ray.dir.z > 0)
+                uv.x *= -1;
+            break;
+        }
+        // 0:right, 1:left, 2:top, 3:bottom, 4:back, 5:front
+        auto imageIdx = lookDirAxis * 2 + (dir[lookDirAxis] < 0 ? 1 : 0);
+        auto image = cubeMapImages[imageIdx];
+        // [-1, 1]のuvを[0, width-1]に変換
+        auto w = (int)((uv.x + 1) * 0.5 * (image->width - 1));
+        auto h = (int)((uv.y * -1 + 1) * 0.5 * (image->height - 1));
+        spectrum += *image->pixels[image->width * h + w];
+    }
+    else {
+        spectrum += Spectrum::Sky;
+    }
 }
