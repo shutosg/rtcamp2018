@@ -18,10 +18,16 @@ Camera::Camera(const Vec & pos, const Vec & dir, const Vec & up, double imagePla
 {
 }
 
-Ray Camera::getPrimaryRay(double x, double y)
+Ray Camera::getPrimaryRay(double x, double y, int width, int height)
 {
+    // アンチエイリアシング
+    Random &rnd = Random::get_instance();
+    x += rnd.random(-0.5, 0.5) / width;
+    y += rnd.random(-0.5, 0.5) / height;
+
     auto rayDir = dir.scale(imagePlane) + xAxis * x * aspect + yAxis * y;
     auto eyeOffset = Vec(lensRadius, lensRadius, 0);
+
     // lensRadiusが0より大きければ被写界深度を考慮
     if (lensRadius > 0) {
         Random &rnd = Random::get_instance();

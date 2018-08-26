@@ -135,7 +135,6 @@ void Renderer::startRendering()
     // レイを飛ばして色を算出
     auto size = width * height;
     printf("tracing...\n");
-    Random& rnd = Random::get_instance();
 
     auto sampleIdx = 0;
 
@@ -145,7 +144,11 @@ void Renderer::startRendering()
             bindThread();  // 論理コアが64以上マシンでもCPUグループを跨いでスレッドを実行できるようにする
             for (auto x = 0; x < width; x++) {
                 auto idx = y * width + x;
-                auto ray = cam.getPrimaryRay((x + rnd.random(-0.5, 0.5)) / width - 0.5, -(y + rnd.random(-0.5, 0.5)) / height + 0.5);
+                auto ray = cam.getPrimaryRay(
+                    ((x + 0.5) / width - 0.5) * 2.0,
+                    (-(y + 0.5) / height + 0.5) * 2.0,
+                    width, height
+                );
                 scene.trace(ray, colors[idx]);
             }
         }
