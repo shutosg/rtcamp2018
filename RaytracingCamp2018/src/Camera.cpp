@@ -30,7 +30,7 @@ Ray Camera::getPrimaryRay(double x, double y)
             eyeOffset.y = rnd.random(-lensRadius, lensRadius);
         }
     }
-    return Ray(eye + eyeOffset, rayDir.normalize() - eyeOffset.scale(imagePlane / focalDistance));
+    return Ray(eye + eyeOffset, (rayDir.normalize().scale(focalDistance) - eyeOffset).normalize());
 }
 
 Camera::~Camera()
