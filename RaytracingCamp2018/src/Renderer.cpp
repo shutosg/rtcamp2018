@@ -108,7 +108,6 @@ void Renderer::initTimer()
     lastPrintTime = getTime();
     lastSaveTime = getTime();
     startTime = getTime();
-    lastSaveSampleNum = 0;
 }
 
 void Renderer::startRendering()
@@ -137,11 +136,18 @@ void Renderer::startRendering()
     printf("tracing...\n");
 
     auto sampleIdx = 0;
+    renderStartTime = getTime();
 
+#ifdef PRODUCTION
     for (; getDiff(startTime, getTime()) < constants::kTIME_LIMIT; sampleIdx++) {
 #pragma omp parallel for schedule(dynamic) num_threads(72)  // 競技用環境に合わせて論理コア数を直接指定
         for (auto y = 0; y < height; y++) {
             bindThread();  // 論理コアが64以上マシンでもCPUグループを跨いでスレッドを実行できるようにする
+#else
+    for (; sampleIdx < constants::kMAX_SAMPLING_NUM; sampleIdx++) {
+#pragma omp parallel for schedule(dynamic) num_threads(11)
+        for (auto y = 0; y < height; y++) {
+#endif
             for (auto x = 0; x < width; x++) {
                 auto idx = y * width + x;
                 auto ray = cam.getPrimaryRay(
@@ -154,6 +160,7 @@ void Renderer::startRendering()
         }
         checkProgress(sampleIdx + 1);
     }
+
     printf("Rendering Time: %s\n", timeFormat(getDiff(startTime, getTime())).c_str());
     printf("Start Saving Final Result\n");
 #pragma omp parallel for
@@ -170,27 +177,36 @@ void Renderer::checkProgress(int sampleNum)
     auto now = getTime();
     auto printDiff = getDiff(lastPrintTime, now);
     if (printDiff > PrintInterval) {
-        auto prog = getProgress(sampleNum);
         auto timeDiff = getDiff(startTime, now);
+        auto prog = getProgress(sampleNum);
+#ifdef PRODUCTION
+        printf("%2.2lf%% Completed... Remaining %s\n", prog * 100.0, timeFormat(constants::kTIME_LIMIT - timeDiff).c_str());
+#else
         int remainingTime = (timeDiff / prog - timeDiff);
-        printf("%2.2lf%% Completed... Remaining %s\n", prog * 100.0, timeFormat(remainingTime).c_str());
+        printf("%d / %d Samples  %3.5f Sec./iter.  Remaining: %s\n",
+            sampleNum,
+            constants::kMAX_SAMPLING_NUM,
+            getDiff(renderStartTime, now) * 0.001 / sampleNum,
+            timeFormat(remainingTime).c_str());
+#endif
         lastPrintTime = now;
     }
     const double SaveIntervalTime = 15000;
-    const int SaveIntervalSampleNum = 9999999999;
-    if (getDiff(lastSaveTime, now) > SaveIntervalTime || sampleNum - lastSaveSampleNum >= SaveIntervalSampleNum) {
+    if (getDiff(lastSaveTime, now) > SaveIntervalTime) {
         auto saveColors = new Spectrum[width * height];
 #pragma omp parallel for
         for (auto i = 0; i < width * height; i++) {
             saveColors[i] = colors[i].scale(1.0 / sampleNum);
         }
-#pragma omp critical
+#pragma omp single
         {
+#ifdef PRODUCTION
             saveImage("output", saveColors, false, sampleNum - 1);
-            // saveImage("output", saveColors);
+#else
+            saveImage("output", saveColors);
+#endif
             delete[] saveColors;
             lastSaveTime = now;
-            lastSaveSampleNum = sampleNum;
         }
     }
 }
@@ -236,7 +252,7 @@ std::string Renderer::timeFormat(double millisec)
 {
     auto sec = (int)millisec / 1000;
     char buff[30];
-    snprintf(buff, sizeof(buff), "%d Hour %d Min. %d Sec.", sec / 3600, sec % 3600 / 60, sec % 3600 % 60);
+    snprintf(buff, sizeof(buff), "%dH %dM %dS", sec / 3600, sec % 3600 / 60, sec % 3600 % 60);
     std::string buffAsStdStr = buff;
     return buffAsStdStr;
 }

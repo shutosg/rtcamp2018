@@ -24,7 +24,7 @@ PolygonObject::PolygonObject(const ObjLoader &loader, const Vec &pos, const Vec 
 {
     // objloaderからデータをコピー
     // 頂点情報
-    vertNum = loader.vertices->size();
+    vertNum = (int)loader.vertices->size();
     vertices = new Vec*[vertNum];
     for (auto i = 0; i < vertNum; i++) {
         vertices[i] = new Vec(*loader.vertices->at(i));
@@ -32,7 +32,7 @@ PolygonObject::PolygonObject(const ObjLoader &loader, const Vec &pos, const Vec 
     // 面情報
     verticesIndexes = new int[loader.verticesIndexes->size()];
     verticesIndexes = loader.verticesIndexes->data();
-    int polyNum = loader.faceIndexes->size();
+    auto polyNum = (int)loader.faceIndexes->size();
     for (auto i = 0; i < polyNum * 3; i += 3) {
         Triangle t;
         t.vIdx[0] = verticesIndexes[i + 0];

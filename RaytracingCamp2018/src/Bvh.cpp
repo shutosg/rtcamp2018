@@ -10,6 +10,9 @@ Bvh::Bvh()
 Bvh::Bvh(const std::vector<Triangle> &tris, std::vector<Bvh*> &nodeList) : Bvh()
 {
     nodeList.push_back(this);
+#ifndef PRODUCTION
+    printf("Input Polygon Count: %d\n", (int)tris.size());
+#endif
     for (auto t : tris) {
         this->tris.push_back(t);
         for (auto i = 0; i < 3; i++) {
@@ -35,6 +38,9 @@ Bvh::Bvh(const std::vector<Triangle> &tris, std::vector<Bvh*> &nodeList) : Bvh()
             lLeaf.pop_back();
             if (i == bestIndex) break;
         }
+#ifndef PRODUCTION
+        printf("  Split Result: %d %d\n", (int)lLeaf.size(), (int)rLeaf.size());
+#endif
         // ここでnewしたBVHはPolygonObjectが責任を負う
         childs[0] = new Bvh(lLeaf, nodeList);
         if (rLeaf.size() != 0) {
@@ -42,6 +48,11 @@ Bvh::Bvh(const std::vector<Triangle> &tris, std::vector<Bvh*> &nodeList) : Bvh()
         }
         this->tris.clear();
     }
+#ifndef PRODUCTION
+    else {
+        printf("not split\n");
+    }
+#endif
 }
 
 // コストを調べるために一時的なBvhを生成する用
@@ -86,7 +97,7 @@ void Bvh::findBestSplit(std::vector<Triangle> tris, int &bestAxis, int &bestInde
         // 2領域に分割してコストを計算する
         std::vector<Triangle> tris2;
         auto ahhhh = tris.size();
-        for (int index = tris.size() - 2; index >= 0; index--) {
+        for (int index = (int)tris.size() - 2; index >= 0; index--) {
             tris2.push_back(tris.back());
             tris.pop_back();
             if (tris2.size() <= 1) continue;
@@ -123,7 +134,7 @@ std::vector<Triangle> Bvh::findCandidates(const Ray &ray) const
 
     // 子を調べる
     for (auto c : childs) {
-        if (!c) return candidates;
+        if (!c) continue;
         auto tmp = c->findCandidates(ray);
         for (auto t : tmp) {
             candidates.push_back(t);
