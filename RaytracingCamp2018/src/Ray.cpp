@@ -8,7 +8,7 @@ Ray::Ray()
 
 Ray::Ray(const Vec &origin, const Vec &dir, bool isAdvanceRay)
     : origin(origin)
-    , dir(dir)
+    , dir(dir.normalize())
 {
     if(isAdvanceRay) {
         this->origin = origin + dir.scale(constants::kEPS);

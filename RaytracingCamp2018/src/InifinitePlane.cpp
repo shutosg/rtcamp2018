@@ -5,6 +5,7 @@ InfinitePlane::InfinitePlane()
     , normal(new Vec(0, 1, 0))
     , d(0)
 {
+    *normal = normal->normalize();
 }
 
 InfinitePlane::InfinitePlane(Vec *normal, double d, Material *mat)

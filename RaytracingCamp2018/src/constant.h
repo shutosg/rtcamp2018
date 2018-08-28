@@ -6,6 +6,6 @@ namespace constants {
     const double kEPS = 1e-6;
     const double kVACUUM_REFRACTIVE_INDEX = 1.0;
     const int kMAX_TRACE_DEPTH = 8;
-    const int kMAX_SAMPLING_NUM = 10;
-    const int kTIME_LIMIT = 120000;
+    const int kMAX_SAMPLING_NUM = 512;
+    const int kTIME_LIMIT = 120 * 1000;
 };
