@@ -6,12 +6,11 @@ class Sphere : public IIntersectable
 {
 public:
     Sphere();
-    Sphere(const Sphere &sphere);
-    Sphere(double radius, Vec *pos, Material *mat, bool visibleFromCamera = true);
-    ~Sphere();
+    Sphere(const Sphere &s);
+    Sphere(const double radius, const Vec pos, Material *mat, const  bool visibleFromCamera = true);
     void intersect(const Ray &ray, int depth, Intersection &isect);
 
     double radius;
-    Vec *pos;
+    Vec pos;
 };
 

@@ -94,9 +94,9 @@ void PolygonObject::intersect(const Ray &ray, int depth, Intersection &isect)
     }
     if (nearest.isHit()) {
         isect.t = nearest.t;
-        *isect.mat = *mat;
-        *isect.normal = *nearest.normal;
-        *isect.point = *nearest.point;
+        isect.mat = mat;
+        isect.normal = nearest.normal;
+        isect.point = nearest.point;
     }
 }
 
@@ -148,8 +148,8 @@ bool PolygonObject::intersectTryangle(const Ray &ray, const Vec &v0, const Vec &
 
     // ヒットするのでtを入れて返す
     isect.t = t;
-    *isect.normal = normal;
-    *isect.point = point;
+    isect.normal = normal;
+    isect.point = point;
     return true;
 }
 

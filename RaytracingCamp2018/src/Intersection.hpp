@@ -8,13 +8,12 @@ class Intersection
 {
 public:
     Intersection();
-    ~Intersection();
     void operator=(const Intersection &isect);
     bool isHit();
 
     double t;
-    Vec *point;
-    Vec *normal;
+    Vec point;
+    Vec normal;
     Material *mat;
 };
 

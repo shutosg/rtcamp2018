@@ -3,33 +3,26 @@
 Sphere::Sphere()
     : IIntersectable()
     , radius(1)
-    , pos(new Vec())
+    , pos(Vec())
 {
 }
 
-Sphere::Sphere(const Sphere &sphere)
-    : IIntersectable(sphere.mat, sphere.bVisibleFromCamera)
-    , radius(sphere.radius)
-    , pos(sphere.pos)
-{
-}
-
-Sphere::Sphere(double radius, Vec *pos, Material *mat, bool visibleFromCamera)
+Sphere::Sphere(const double radius, const Vec pos, Material *mat, const bool visibleFromCamera)
     : IIntersectable(mat, visibleFromCamera)
     , radius(radius)
     , pos(pos)
 {
 }
 
-Sphere::~Sphere()
+Sphere::Sphere(const Sphere &s)
+    : Sphere::Sphere(s.radius, s.pos, new Material(*s.mat), s.bVisibleFromCamera)
 {
-    delete pos;
 }
 
 void Sphere::intersect(const Ray &ray, int depth, Intersection &isect)
 {
     if (!visibleFromCamera(depth)) return;
-    auto p = ray.origin - *pos;
+    auto p = ray.origin - pos;
     auto b = ray.dir.dot(p);
     auto c = p.dot(p) - radius * radius;
 
@@ -43,9 +36,9 @@ void Sphere::intersect(const Ray &ray, int depth, Intersection &isect)
         if (t <= 0) t = -b + s;
         if (t > 0) {
             isect.t = t;
-            *isect.point = ray.origin + ray.dir.scale(t);
-            *isect.normal = (*isect.point - *pos).normalize();
-            *isect.mat = *mat;
+            isect.point = ray.origin + ray.dir.scale(t);
+            isect.normal = (isect.point - pos).normalize();
+            isect.mat = mat;
         }
     }
 }

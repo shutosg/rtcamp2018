@@ -74,15 +74,15 @@ void Scene::trace(const Ray &ray, Spectrum &spectrum, int depth)
     }
 
     // 物体の外部からの交差
-    if (nearest.normal->dot(ray.dir) < 0) {
+    if (nearest.normal.dot(ray.dir) < 0) {
         intersectSurface(ray.dir, nearest, spectrum, constants::kVACUUM_REFRACTIVE_INDEX / nearest.mat->refractiveIndex, depth);
         if (!nearest.mat->emission->equals(Spectrum::Black)) {
-            spectrum += nearest.mat->emission->scale(-nearest.normal->dot(ray.dir));
+            spectrum += nearest.mat->emission->scale(-nearest.normal.dot(ray.dir));
         }
     } else {
         // 物体の内部からの交差
         // 屈折レイ
-        *nearest.normal = nearest.normal->neg();
+        nearest.normal = nearest.normal.neg();
         intersectSurface(ray.dir, nearest, spectrum, nearest.mat->refractiveIndex / constants::kVACUUM_REFRACTIVE_INDEX, depth);
     }
 }
@@ -97,24 +97,24 @@ void Scene::intersectSurface(const Vec &dir, const Intersection &isect, Spectrum
     auto kd = 1.0 - ks - kt;
     if (t < ks) {
         // 鏡面反射
-        auto reflect = dir.reflect(*isect.normal);
+        auto reflect = dir.reflect(isect.normal);
         Spectrum s(Spectrum::Black);
-        trace(Ray(*isect.point, reflect.normalize(), true), s, depth + 1);
+        trace(Ray(isect.point, reflect.normalize(), true), s, depth + 1);
         spectrum += s.scale(ks) * *isect.mat->diffuse;
     } else if (t < ks + kt) {
         // 屈折
-        auto refract = dir.refract(*isect.normal, eta);
+        auto refract = dir.refract(isect.normal, eta);
         Spectrum s(Spectrum::Black);
-        trace(Ray(*isect.point, refract.normalize(), true), s, depth + 1);
+        trace(Ray(isect.point, refract.normalize(), true), s, depth + 1);
         spectrum += s.scale(kt) * *isect.mat->diffuse;
     } else {
         // 拡散反射
 #ifdef USE_PATH_TRACING
         Spectrum s(Spectrum::Black);
-        auto v = isect.normal->randomHemisphere();
-        trace(Ray(*isect.point, v, true), s, depth + 1);
+        auto v = isect.normal.randomHemisphere();
+        trace(Ray(isect.point, v, true), s, depth + 1);
         auto fr = isect.mat->diffuse->scale(1.0 / constants::kPI);
-        double factor = 2.0 * constants::kPI * isect.normal->dot(v);
+        double factor = 2.0 * constants::kPI * isect.normal.dot(v);
         spectrum += (s * fr).scale(factor);
 #else
         for (auto i = 0; i < lights->size(); i++) {
@@ -138,15 +138,15 @@ void Scene::findNearestInterSection(const Ray &ray, int depth, Intersection &nea
 void Scene::diffuseLighting(const Vec &p, const Vec &n, const Light &light, const Spectrum &matDiffuse, Spectrum &spectrum)
 {
     // 交点から光源に向かうベクトル
-    auto v = (*light.pos - p);
+    auto v = (light.pos - p);
     auto dot = n.dot(v.normalize());
     // 面が光源を向いている
     if (dot > 0) {
         // 遮蔽物チェック
-        if (!visible(p, *light.pos)) return;
+        if (!visible(p, light.pos)) return;
         // 光源からの距離に応じて拡散反射ライティング
         auto r = v.len();
-        spectrum += (*light.power).scale(dot / (4 * constants::kPI * r * r)) * matDiffuse;
+        spectrum += (light.power).scale(dot / (4 * constants::kPI * r * r)) * matDiffuse;
     }
 }
 

@@ -6,9 +6,7 @@
 class IIntersectable
 {
 public:
-    IIntersectable()
-        : mat(new Material())
-    {};
+    IIntersectable() : mat(new Material()) {};
     IIntersectable(Material *mat, bool visibleFromCamera = true)
         : mat(mat)
         , bVisibleFromCamera(visibleFromCamera)

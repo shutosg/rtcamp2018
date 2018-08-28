@@ -29,31 +29,31 @@ void Renderer::initScene()
     // 鏡
     scene.addIntersectable(new Sphere(
         0.5,
-        new Vec(-4.5, 0.5, 2),
+        Vec(-4.5, 0.5, 2),
         new Material(new Spectrum(0.95, 0.6, 0.05), 1.0)
     ));
     // クリスタル
     scene.addIntersectable(new Sphere(
         1.0,
-        new Vec(-2.0, 1.0, -1.0),
+        Vec(-2.0, 1.0, -1.0),
         new Material(new Spectrum(1), 0.05, 0.9, 2.8)
     ));
     // 赤
     scene.addIntersectable(new Sphere(
         0.5,
-        new Vec(0.0, 0.5, 3.5),
+        Vec(0.0, 0.5, 3.5),
         new Material(new Spectrum(Spectrum::Red), 0.9)
     ));
     // 緑
     scene.addIntersectable(new Sphere(
         0.5,
-        new Vec(-4, 0.5, -4),
+        Vec(-4, 0.5, -4),
         new Material(new Spectrum(Spectrum::Green), 0.9)
     ));
     // 青
     scene.addIntersectable(new Sphere(
         1.0,
-        new Vec(-1, 1.0, -7),
+        Vec(-1, 1.0, -7),
         new Material(new Spectrum(Spectrum::Blue), 0.9)
     ));
     // コーネルボックス
@@ -61,20 +61,22 @@ void Renderer::initScene()
 
     // ライトの追加
 #ifndef USE_PATH_TRACING
-    scene.addLight(new Light(new Vec(2.5), new Spectrum(100)));
-    scene.addLight(new Light(new Vec(-5.0, 2.0, -1), new Spectrum(80)));
-    scene.addLight(new Light(new Vec(0.0, 2.5, 0.0), new Spectrum(250)));
-    scene.addLight(new Light(new Vec(0.0, -2.5, 0.0), new Spectrum(30)));
+    scene.addLight(new Light(Vec(2.5), Spectrum(100)));
+    scene.addLight(new Light(Vec(-5.0, 2.0, -1), Spectrum(80)));
+    scene.addLight(new Light(Vec(0.0, 2.5, 0.0), Spectrum(250)));
+    scene.addLight(new Light(Vec(0.0, -2.5, 0.0), Spectrum(30)));
 #else
     scene.addIntersectable(new Sphere(
         1,
-        new Vec(-8, 6, 3),
+        Vec(-8, 6, 3),
         new Material(new Spectrum(1, 1, 1), new Spectrum(30)),
         false
     ));
 #endif
     // 無限平面
-    scene.addIntersectable(new InfinitePlane(new Vec(0, 1, 0), 0,
+    scene.addIntersectable(new InfinitePlane(
+        Vec(0, 1, 0),
+        0,
         new Material(new Spectrum(0.99), 0.9)
     ));
 }
@@ -96,11 +98,11 @@ void Renderer::createCornellBox(double w, double h, double d)
     auto x = a + w / 2;
     auto y = a + h / 2;
     auto z = a + d / 2;
-    scene.addIntersectable(new Sphere(a, new Vec(+x, 0, 0), new Material(new Spectrum(0, 0.95, 0), new Spectrum(0.1))));
-    scene.addIntersectable(new Sphere(a, new Vec(-x, 0, 0), new Material(new Spectrum(0.95, 0, 0), new Spectrum(0.1))));
-    scene.addIntersectable(new Sphere(a, new Vec(0, +y, 0), new Material(new Spectrum(0.95), new Spectrum(0.1))));
-    scene.addIntersectable(new Sphere(a, new Vec(0, -y, 0), new Material(new Spectrum(0.95), new Spectrum(0.1))));
-    scene.addIntersectable(new Sphere(a, new Vec(0, 0, -z), new Material(new Spectrum(0.95), new Spectrum(0.1))));
+    scene.addIntersectable(new Sphere(a, Vec(+x, 0, 0), new Material(new Spectrum(0, 0.95, 0), new Spectrum(0.1))));
+    scene.addIntersectable(new Sphere(a, Vec(-x, 0, 0), new Material(new Spectrum(0.95, 0, 0), new Spectrum(0.1))));
+    scene.addIntersectable(new Sphere(a, Vec(0, +y, 0), new Material(new Spectrum(0.95), new Spectrum(0.1))));
+    scene.addIntersectable(new Sphere(a, Vec(0, -y, 0), new Material(new Spectrum(0.95), new Spectrum(0.1))));
+    scene.addIntersectable(new Sphere(a, Vec(0, 0, -z), new Material(new Spectrum(0.95), new Spectrum(0.1))));
 }
 
 void Renderer::initTimer()
@@ -182,7 +184,7 @@ void Renderer::checkProgress(int sampleNum)
 #ifdef PRODUCTION
         printf("%2.2lf%% Completed... Remaining %s\n", prog * 100.0, timeFormat(constants::kTIME_LIMIT - timeDiff).c_str());
 #else
-        int remainingTime = (timeDiff / prog - timeDiff);
+        auto remainingTime = (timeDiff / prog - timeDiff);
         printf("%d / %d Samples  %3.5f Sec./iter.  Remaining: %s\n",
             sampleNum,
             constants::kMAX_SAMPLING_NUM,

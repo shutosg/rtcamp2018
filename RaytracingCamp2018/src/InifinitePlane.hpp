@@ -7,12 +7,11 @@ class InfinitePlane : public IIntersectable
 public:
     InfinitePlane();
     InfinitePlane(const InfinitePlane &p);
-    InfinitePlane(Vec *normal, double d, Material *mat);
-    ~InfinitePlane();
+    InfinitePlane(const Vec &normal, const double d, Material *mat);
     void intersect(const Ray &ray, int depth, Intersection &isect);
 
 private:
-    Vec *normal;
+    Vec normal;
     double d;
 };
 
