@@ -111,9 +111,9 @@ void Scene::intersectSurface(const Vec &dir, const Intersection &isect, Spectrum
         // 拡散反射
 #ifdef USE_PATH_TRACING
         Spectrum s(Spectrum::Black);
-        auto v = isect.normal.randomHemisphere();
+        auto v = isect.normal.cosineWeightedRandomHemisphere();
         trace(Ray(isect.point, v, true), s, depth + 1);
-        auto fr = isect.mat->diffuse->scale(1.0 / constants::kPI);
+        auto fr = isect.mat->diffuse->scale((1.0 - ks - kt) / constants::kPI);
         double factor = 2.0 * constants::kPI * isect.normal.dot(v);
         spectrum += (s * fr).scale(factor);
 #else

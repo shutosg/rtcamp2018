@@ -45,19 +45,22 @@ public:
         auto newZ = -sinY * cosZ * x + sinY * sinZ * y + cosY * z;
         return Vec(newX, newY, newZ);
     };
-    inline Vec randomHemisphere() const
+    inline Vec cosineWeightedRandomHemisphere() const
     {
+        Vec v1, v2, v3;
+        v1 = this->normalize();
+        if (std::abs(x) < constants::kEPS) {
+            v2 = Vec(1, 0, 0).cross(v1).normalize();
+        }
+        else {
+            v2 = Vec(0, 1, 0).cross(v1).normalize();
+        }
+        v3 = v1.cross(v2);
         Random &rand = Random::get_instance();
-        Vec v = Vec(1);
-        while (v.len() > 1) {
-            v.x = rand.random(-1.0, 1.0);
-            v.y = rand.random(-1.0, 1.0);
-            v.z = rand.random(-1.0, 1.0);
-        }
-        if (v.dot(*this) < 0) {
-            v = v.neg();
-        }
-        return v.normalize();
+        auto u = rand.random();
+        auto r = sqrt(u);
+        auto phi = 2 * constants::kPI * rand.random();
+        return (v2.scale(r * std::cos(phi)) + v3.scale(r * std::sin(phi)) + v1.scale(std::sqrt(1 - u))).normalize();
     };
     inline Vec operator + (const Vec &v) const { return Vec(x + v.x, y + v.y, z + v.z); };
     inline Vec operator - (const Vec &v) const { return Vec(x - v.x, y - v.y, z - v.z); };

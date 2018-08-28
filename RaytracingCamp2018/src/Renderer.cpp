@@ -142,14 +142,12 @@ void Renderer::startRendering()
 
 #ifdef PRODUCTION
     for (; getDiff(startTime, getTime()) < constants::kTIME_LIMIT; sampleIdx++) {
-#pragma omp parallel for schedule(dynamic) num_threads(72)  // 競技用環境に合わせて論理コア数を直接指定
-        for (auto y = 0; y < height; y++) {
-            bindThread();  // 論理コアが64以上マシンでもCPUグループを跨いでスレッドを実行できるようにする
+#pragma omp parallel for schedule(dynamic)
 #else
     for (; sampleIdx < constants::kMAX_SAMPLING_NUM; sampleIdx++) {
 #pragma omp parallel for schedule(dynamic) num_threads(11)
-        for (auto y = 0; y < height; y++) {
 #endif
+        for (auto y = 0; y < height; y++) {
             for (auto x = 0; x < width; x++) {
                 auto idx = y * width + x;
                 auto ray = cam.getPrimaryRay(
@@ -177,24 +175,26 @@ void Renderer::checkProgress(int sampleNum)
 {
     const double PrintInterval = 10000;
     auto now = getTime();
-    auto printDiff = getDiff(lastPrintTime, now);
-    if (printDiff > PrintInterval) {
-        auto timeDiff = getDiff(startTime, now);
+    auto timeDiff = getDiff(startTime, now);
+    auto lapTime = getDiff(renderStartTime, now) / sampleNum;
+    auto remaining = constants::kTIME_LIMIT - timeDiff;
+    if (getDiff(lastPrintTime, now) > PrintInterval) {
         auto prog = getProgress(sampleNum);
 #ifdef PRODUCTION
-        printf("%2.2lf%% Completed... Remaining %s\n", prog * 100.0, timeFormat(constants::kTIME_LIMIT - timeDiff).c_str());
+        printf("%d Samples... Remaining %s\n", sampleNum, timeFormat(remaining).c_str());
 #else
         auto remainingTime = (timeDiff / prog - timeDiff);
         printf("%d / %d Samples  %3.5f Sec./iter.  Remaining: %s\n",
             sampleNum,
             constants::kMAX_SAMPLING_NUM,
-            getDiff(renderStartTime, now) * 0.001 / sampleNum,
+            lapTime * 0.001,
             timeFormat(remainingTime).c_str());
 #endif
         lastPrintTime = now;
     }
+    // 定期保存 or 次のイテレーションがタイムリミットに間に合わなそうなら保存
     const double SaveIntervalTime = 15000;
-    if (getDiff(lastSaveTime, now) > SaveIntervalTime) {
+    if (getDiff(lastSaveTime, now) > SaveIntervalTime || lapTime > remaining) {
         auto saveColors = new Spectrum[width * height];
 #pragma omp parallel for
         for (auto i = 0; i < width * height; i++) {
