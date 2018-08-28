@@ -32,29 +32,29 @@ void Renderer::initScene()
         new Vec(-4.5, 0.5, 2),
         new Material(new Spectrum(0.95, 0.6, 0.05), 1.0)
     ));
-    // 赤
-    scene.addIntersectable(new Sphere(
-        0.5,
-        new Vec(0.0, 0.5, 3.5),
-        new Material(new Spectrum(1, 0.0, 0), 0.9)
-    ));
     // クリスタル
     scene.addIntersectable(new Sphere(
         1.0,
         new Vec(-2.0, 1.0, -1.0),
         new Material(new Spectrum(1), 0.05, 0.9, 2.8)
     ));
+    // 赤
+    scene.addIntersectable(new Sphere(
+        0.5,
+        new Vec(0.0, 0.5, 3.5),
+        new Material(new Spectrum(Spectrum::Red), 0.9)
+    ));
     // 緑
     scene.addIntersectable(new Sphere(
         0.5,
         new Vec(-4, 0.5, -4),
-        new Material(new Spectrum(0, 1, 0), 0.9)
+        new Material(new Spectrum(Spectrum::Green), 0.9)
     ));
     // 青
     scene.addIntersectable(new Sphere(
         1.0,
         new Vec(-1, 1.0, -7),
-        new Material(new Spectrum(0, 0, 1), 0.9)
+        new Material(new Spectrum(Spectrum::Blue), 0.9)
     ));
     // コーネルボックス
     // createCornellBox(6, 6, 8);
