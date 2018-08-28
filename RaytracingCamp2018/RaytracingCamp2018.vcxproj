@@ -37,7 +37,6 @@
     <ClCompile Include="src\Spectrum.cpp" />
     <ClCompile Include="src\Sphere.cpp" />
     <ClCompile Include="src\utils.cpp" />
-    <ClCompile Include="src\Vec.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AABBox.hpp" />

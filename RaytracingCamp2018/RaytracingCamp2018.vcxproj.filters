@@ -15,7 +15,6 @@
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\Spectrum.cpp" />
     <ClCompile Include="src\Sphere.cpp" />
-    <ClCompile Include="src\Vec.cpp" />
     <ClCompile Include="src\utils.cpp" />
     <ClCompile Include="src\Bvh.cpp" />
     <ClCompile Include="src\AABBox.cpp" />
