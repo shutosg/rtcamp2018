@@ -262,3 +262,6 @@ __pycache__/
 
 # resources
 !RaytracingCamp2018/resources/**
+RaytracingCamp2018/render/*.png
+RaytracingCamp2018/resources/*.c4d
+RaytracingCamp2018/resources/*.png
