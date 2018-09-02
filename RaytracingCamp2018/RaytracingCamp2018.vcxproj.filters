@@ -18,6 +18,7 @@
     <ClCompile Include="src\Bvh.cpp" />
     <ClCompile Include="src\AABBox.cpp" />
     <ClCompile Include="src\InifinitePlane.cpp" />
+    <ClCompile Include="src\Disc.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Camera.hpp" />
@@ -41,6 +42,7 @@
     <ClInclude Include="src\Triangle.hpp" />
     <ClInclude Include="src\AABBox.hpp" />
     <ClInclude Include="src\InifinitePlane.hpp" />
+    <ClInclude Include="src\Disc.hpp" />
     <ClInclude Include="src\CubeMapImage.hpp" />
   </ItemGroup>
 </Project>
