@@ -1,6 +1,6 @@
 # Aozora-Renderer
 
-![](https://drive.google.com/uc?id=1428cvbxj1RePjmNSv6xnMJeUk8vcjKcK&export=download)
+![](https://pbs.twimg.com/media/DmFY4xMUwAAg94u.jpg:orig)
 
 - [レイトレ合宿6](https://sites.google.com/site/raytracingcamp6/)で制作したレンダラ
 - VC++ 2017でのみ動作確認
