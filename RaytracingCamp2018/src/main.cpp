@@ -2,8 +2,8 @@
 
 int main() {
 #ifdef PRODUCTION
-    const int w = 810;
-    const int h = 540;
+    const int w = 1620;
+    const int h = 1080;
 #else
     const int w = 480;
     const int h = 320;

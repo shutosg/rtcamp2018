@@ -24,14 +24,8 @@ void Renderer::initScene()
         Vec(),
         Vec(2.5),
         Vec(),
-        Material(new Spectrum(1))
+        Material(new Spectrum(0.95), 0.9)
     );
-    // 鏡
-    scene.addIntersectable(new Sphere(
-        0.5,
-        Vec(-4.5, 0.5, 2),
-        new Material(new Spectrum(0.95, 0.6, 0.05), 1.0)
-    ));
     // クリスタル
     scene.addIntersectable(new Sphere(
         1.0,
@@ -55,6 +49,12 @@ void Renderer::initScene()
         1.0,
         Vec(-1, 1.0, -7),
         new Material(new Spectrum(Spectrum::Blue), 0.9)
+    ));
+    // オレンジ
+    scene.addIntersectable(new Sphere(
+        0.3,
+        Vec(-4, 0.3, 0),
+        new Material(new Spectrum(0.95, 0.6, 0.05), 1.0)
     ));
     // コーネルボックス
     // createCornellBox(6, 6, 8);
@@ -87,7 +87,7 @@ void Renderer::initCubeMap()
     int w, h;
     Spectrum **colors;
     for (auto i = 0; i < 6; i++) {
-        image.loadPng("resources\\studio022_" + std::to_string(i) + ".png", colors, w, h);
+        image.loadPng("resources\\aosky_011a_8k_c1_" + std::to_string(i) + ".png", colors, w, h);
         scene.addCubeMapImage(new CubeMapImage(colors, w, h), i);
     }
 }
@@ -122,14 +122,14 @@ void Renderer::startRendering()
 
     // カメラ作成
     auto aspect = (double)width / height;
-    auto camPos = Vec(-7.5, 4, 7.25);
+    auto camPos = Vec(-7.5, 0.3, 7.25);
     auto cam = Camera(
         camPos,
-        Vec(0.85, -0.5, -1),
+        Vec(0.85, 0.1, -1),
         Vec(0, 1, 0),
         3.0,
         (camPos - Vec(0, 1, 1)).len(),
-        0.4,
+        0.2,
         aspect
     );
 
