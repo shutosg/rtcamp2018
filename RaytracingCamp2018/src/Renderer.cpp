@@ -192,9 +192,13 @@ void Renderer::checkProgress(int sampleNum)
 #endif
         lastPrintTime = now;
     }
-    // 定期保存 or 次のイテレーションがタイムリミットに間に合わなそうなら保存
     const double SaveIntervalTime = 15000;
+#ifdef PRODUCTION
+    // 定期保存 or 次のイテレーションがタイムリミットに間に合わなそうなら保存
     if (getDiff(lastSaveTime, now) > SaveIntervalTime || lapTime > remaining) {
+#else 
+    if (getDiff(lastSaveTime, now) > SaveIntervalTime) {
+#endif
         auto saveColors = new Spectrum[width * height];
 #pragma omp parallel for
         for (auto i = 0; i < width * height; i++) {
